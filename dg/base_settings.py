@@ -155,6 +155,7 @@ TEMPLATES = [
 # )
 
 INSTALLED_APPS = (
+    'loop',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -201,7 +202,6 @@ INSTALLED_APPS = (
     'videokheti',
     'ivr',
     'training',
-    'loop',
     'qacoco',
     'mrppayment',
     'smart_selects',
