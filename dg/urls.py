@@ -44,7 +44,7 @@ qacoco_admin.logout_template = 'social_website/home.html'
 training_admin.index_template = 'social_website/index.html'
 training_admin.login_template = 'social_website/login.html'
 training_admin.logout_template = 'social_website/home.html'
-loop_admin.index_template = 'social_website/index.html'
+loop_admin.index_template = 'loop/index.html'
 loop_admin.login_template = 'social_website/login.html'
 loop_admin.logout_template = 'social_website/home.html'
 website_admin.index_template = 'social_website/index.html'
@@ -95,7 +95,7 @@ urlpatterns = patterns('',
     # End imports from dashboard
     ##Special page.needs to be deleted
     (r'^spring/analytics/?$', spring_analytics),
-    
+
     # Imports from farmerbook
     (r'^farmerbook/$', farmer_book_views.get_home_page),
     (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),

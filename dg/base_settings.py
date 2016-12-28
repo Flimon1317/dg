@@ -103,6 +103,7 @@ TEMPLATES = [
             os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
             os.path.join(PROJECT_PATH, 'media/'),
             os.path.join(PROJECT_PATH, 'templates/data_upload'),
+            os.path.join(PROJECT_PATH, 'templates/loop'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
