@@ -1,7 +1,8 @@
 from django.db import connection
 from django.template import Template, Context
 import types
-import datetime
+import datetime, time
+import csv
 
 def construct_query(var, context_dict):
     return Template(var).render(Context(context_dict))
@@ -21,12 +22,27 @@ def run_query(query_string, *query_args):
     if(not query_string):
         return []
     return_list = []
+    # print ("----- runquery query_string %s " %query_string)
+    start_time = time.time()
     cursor = connection.cursor()
     cursor.execute(query_string, query_args)
     col_names = [desc[0] for desc in cursor.description]
     rows = cursor.fetchall()
+    end_time = time.time()
+    sql_exec_time = (end_time - start_time)
+    # print(" ----- run query sql exec time --- %f" %(end_time - start_time))
+    start_time = time.time()
     for row in rows:
         return_list.append(dict(zip(col_names,row)))
+
+    end_time = time.time()
+    # print(" ----- runquery after sql loop exec time --- %f" %(end_time - start_time))
+    processing_time = (end_time - start_time)
+    with open('overview_module_query_log.csv', 'a') as fp:
+       a = csv.writer(fp, delimiter=',')
+       data = [query_string, sql_exec_time, processing_time]
+       a.writerow(data)
+
     return return_list
 
 #this returns
@@ -37,13 +53,28 @@ def run_query_dict(query_string, dict_key, *query_args):
         return {}
     return_list = {}
     cursor = connection.cursor()
+    
+    # print ("----- query_string %s " %query_string)
+    start_time = time.time()
     cursor.execute(query_string,query_args)
     col_names = [desc[0] for desc in cursor.description]
     rows = cursor.fetchall()
+    end_time = time.time()
+    # print(" ----- sql exec time --- %f" %(end_time - start_time))
+    sql_exec_time = (end_time - start_time)
+    start_time = time.time()
     if(dict_key != col_names[0]):
         raise Exception, dict_key+" is not the first column in returned query's column list"
     for row in rows:
         return_list[row[0]] = row[1:]
+
+    end_time = time.time()
+    # print(" ----- after sql loop exec time --- %f" %(end_time - start_time))
+    processing_time = (end_time - start_time)
+    with open('overview_module_query_log.csv', 'a') as fp:
+       a = csv.writer(fp, delimiter=',')
+       data = [query_string, sql_exec_time, processing_time]
+       a.writerow(data)
 
     return return_list
 

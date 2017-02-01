@@ -1,7 +1,7 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
 import datetime
-
+import time
 from geographies.models import Block, Country, District, State, Village
 from output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, video_analytics_sql, screening_analytics_sql
 from output import views
@@ -11,6 +11,7 @@ from output.database.utility import run_query, run_query_dict, run_query_dict_li
 
 
 def overview_module(request):
+    # main_start_time  = start_time = time.time()
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     geog_list = [None,'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
@@ -23,15 +24,38 @@ def overview_module(request):
         geog_child = geog_list[geog_list.index(geog)+1]
 
     #Constructing table data
+    # start_time = time.time()
     vid_prod = run_query_dict(shared_sql.overview(type='production',geog=geog,id=id, from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- vid prod time --- %f" %(end_time - start_time))
+    # start_time = time.time()    
     vid_screening = run_query_dict(shared_sql.overview(type='screening',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- vid screening time --- %f" %(end_time - start_time))
+    # start_time = time.time()
     adoption = run_query_dict(shared_sql.overview(type='adoption',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- adoption time --- %f" %(end_time - start_time))
+    # start_time = time.time()
     tot_prac = run_query_dict(shared_sql.overview(type='practice',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- tot prac time --- %f" %(end_time - start_time))
+    # start_time = time.time()
     tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- tot per time --- %f" %(end_time - start_time))
+    # start_time = time.time()
     tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    # end_time = time.time()
+    # print(" ----- tot vil time --- %f" %(end_time - start_time))
+    # start_time = time.time()
 
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
     table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date))
+    # end_time = time.time()
+    # print(" ----- table data prod time --- %f" %(end_time - start_time))
+    # print(" ----- after db hit time --- %f" %(end_time - main_start_time))
+    # start_time = time.time()
     for i in table_data:
         if i['id'] in vid_prod:
             i['tot_pro'] = vid_prod[i['id']][0]
@@ -81,8 +105,10 @@ def overview_module(request):
     #country data is the top-data    
     country_data = {}
     #Total Person Group
+    # start_time = time.time()
     country_data.update(run_query(overview_analytics_sql.overview_tot_pg(geog, id, from_date, to_date, partners))[0])
-    
+    # end_time = time.time()
+    # print(" ----- country_data time --- %f" %(end_time - start_time))
     if(to_date):
         date_var = to_date
     else:
@@ -105,13 +131,16 @@ def overview_module(request):
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
-    print get_req_url
+    # print get_req_url
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
     if(geog_child != "NULL"):
         header_geog = geog_child
     else:
         header_geog = "Village"
     
+    end_time = time.time()
+    # print(" ----- time --- %f" %(end_time - start_time))
+    # print(" ----- total time --- %f" %(end_time - main_start_time))
     return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
                                                            country_data = country_data, \
                                                            table_data = table_data, \
