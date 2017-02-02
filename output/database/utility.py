@@ -38,7 +38,7 @@ def run_query(query_string, *query_args):
     end_time = time.time()
     # print(" ----- runquery after sql loop exec time --- %f" %(end_time - start_time))
     processing_time = (end_time - start_time)
-    with open('overview_module_query_log.csv', 'a') as fp:
+    with open('./overview_module_query_log.csv', 'a') as fp:
        a = csv.writer(fp, delimiter=',')
        data = [query_string, sql_exec_time, processing_time]
        a.writerow(data)
@@ -53,7 +53,7 @@ def run_query_dict(query_string, dict_key, *query_args):
         return {}
     return_list = {}
     cursor = connection.cursor()
-    
+
     # print ("----- query_string %s " %query_string)
     start_time = time.time()
     cursor.execute(query_string,query_args)
@@ -71,7 +71,7 @@ def run_query_dict(query_string, dict_key, *query_args):
     end_time = time.time()
     # print(" ----- after sql loop exec time --- %f" %(end_time - start_time))
     processing_time = (end_time - start_time)
-    with open('overview_module_query_log.csv', 'a') as fp:
+    with open('./overview_module_query_log.csv', 'a') as fp:
        a = csv.writer(fp, delimiter=',')
        data = [query_string, sql_exec_time, processing_time]
        a.writerow(data)
