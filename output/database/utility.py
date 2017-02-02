@@ -3,6 +3,7 @@ from django.template import Template, Context
 import types
 import datetime, time
 import csv
+from sys import getsizeof
 
 def construct_query(var, context_dict):
     return Template(var).render(Context(context_dict))
@@ -40,7 +41,7 @@ def run_query(query_string, *query_args):
     processing_time = (end_time - start_time)
     with open('/home/ubuntu/code/dg_git/output/database/overview_module_query_log.csv', 'a') as fp:
        a = csv.writer(fp, delimiter=',')
-       data = [query_string, sql_exec_time, processing_time]
+       data = [query_string, sql_exec_time, processing_time,len(rows),getsizeof(rows)]
        a.writerow(data)
 
     return return_list
@@ -73,7 +74,7 @@ def run_query_dict(query_string, dict_key, *query_args):
     processing_time = (end_time - start_time)
     with open('/home/ubuntu/code/dg_git/output/database/overview_module_query_log.csv', 'a') as fp:
        a = csv.writer(fp, delimiter=',')
-       data = [query_string, sql_exec_time, processing_time]
+       data = [query_string, sql_exec_time, processing_time,len(rows),getsizeof(rows)]
        a.writerow(data)
 
     return return_list
