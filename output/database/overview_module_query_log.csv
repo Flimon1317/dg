@@ -3,87 +3,176 @@ FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",1.482496976852417,4.0531158447265625e-06
+ORDER BY country_id",1.482513189315796,5.0067901611328125e-06
 "SELECT country_id as id, SUM(total_screening) as tot_scr
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",1.4839918613433838,4.0531158447265625e-06
+ORDER BY country_id",1.4809229373931885,4.0531158447265625e-06
 "SELECT country_id as id, SUM(total_adoption) as tot_ado
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",1.4819669723510742,5.0067901611328125e-06
+ORDER BY country_id",1.4809880256652832,4.0531158447265625e-06
 "SELECT country_id as id, COUNT(DISTINCT VIDM.practice_id) as tot_pra
 FROM video_myisam VIDM
 WHERE VIDM.video_production_date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",0.003885984420776367,1.9073486328125e-06
+ORDER BY country_id",0.0006649494171142578,3.0994415283203125e-06
 "SELECT country_id as id, COUNT(DISTINCT PMAM.person_id) as tot_per
 FROM person_meeting_attendance_myisam PMAM
 force index (person_meeting_attendance_myisam_village_id)
 WHERE PMAM.date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",7.938212871551514,5.0067901611328125e-06
+ORDER BY country_id",6.023090124130249,5.0067901611328125e-06
 "SELECT country_id as id, COUNT(DISTINCT SCM.village_id) as tot_vil
 FROM screening_myisam SCM
 force index (screening_myisam_village_id)
 WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'
 GROUP BY country_id
-ORDER BY country_id",0.4732191562652588,5.0067901611328125e-06
+ORDER BY country_id",0.2650120258331299,5.0067901611328125e-06
 "SELECT DISTINCT C.id, COUNTRY_NAME AS name
-FROM geographies_COUNTRY C",0.008414030075073242,2.9087066650390625e-05
+FROM geographies_COUNTRY C",0.0004489421844482422,3.2901763916015625e-05
 "SELECT COUNT(DISTINCT group_id) AS tot_pg
 FROM screening_myisam SCM
 force index (screening_myisam_village_id)
-WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.22452712059020996,8.106231689453125e-06
+WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.22253704071044922,8.106231689453125e-06
 "SELECT COUNT(DISTINCT village_id) as count
 FROM screening_myisam SCM
 force index (screening_myisam_village_id)
-WHERE SCM.date BETWEEN '2016-12-03' AND '2017-02-01'",0.44721102714538574,8.106231689453125e-06
+WHERE SCM.date BETWEEN '2016-12-03' AND '2017-02-01'",0.38767218589782715,7.867813110351562e-06
 "SELECT SUM(VPC.total_screening) as tot_scr, SUM(VPC.total_attendance) as tot_att
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
-WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'",0.903048038482666,8.106231689453125e-06
+WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'",0.9041750431060791,8.106231689453125e-06
 "SELECT SUM(total_adopted_attendees) AS tot_adopt_per , SUM(total_active_attendees) AS tot_per, SUM(total_adoption_by_active) AS tot_active_adop
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
-WHERE date = '2017-02-01'",0.48562192916870117,9.059906005859375e-06
+WHERE date = '2017-02-01'",0.48572611808776855,8.821487426757812e-06
 "SELECT COUNT(DISTINCT SCM.video_id) AS count
 FROM screening_myisam SCM
 force index (screening_myisam_village_id)
-WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.20157313346862793,7.867813110351562e-06
+WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.20148897171020508,8.106231689453125e-06
 "SELECT DISTINCT vcp.partner_id, P.PARTNER_NAME
 FROM village_precalculation_copy vcp
 JOIN programs_PARTNER P ON P.id = vcp.partner_id
-ORDER BY P.PARTNER_NAME",10.101891040802002,8.893013000488281e-05
+ORDER BY P.PARTNER_NAME",4.409726142883301,0.00010204315185546875
 "SELECT date, SUM(total_videos_produced)
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 GROUP BY date
-HAVING date between '2016-02-03' and '2017-02-01'",2.6419599056243896,0.00018310546875
+HAVING date between '2016-02-03' and '2017-02-01'",2.5980160236358643,0.00018095970153808594
 "SELECT date, SUM(total_screening)
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 GROUP BY date
-HAVING date between '2016-02-03' and '2017-02-01'",2.6053249835968018,0.00020384788513183594
+HAVING date between '2016-02-03' and '2017-02-01'",2.5723519325256348,0.00020384788513183594
 "SELECT date, SUM(total_adoption)
 FROM village_precalculation_copy VPC
 force index (village_precalculation_copy_village_id)
 GROUP BY date
-HAVING date between '2016-02-03' and '2017-02-01'",2.6031651496887207,0.0002009868621826172
+HAVING date between '2016-02-03' and '2017-02-01'",2.571259021759033,0.0001971721649169922
 "SELECT date, COUNT(*)
 FROM (SELECT VIDM.practice_id, MIN(video_production_date) AS date
 FROM video_myisam VIDM
 GROUP BY practice_id) as tab1
 GROUP BY date
-HAVING date between '2016-02-03' and '2017-02-01'",0.0007610321044921875,2.86102294921875e-06
+HAVING date between '2016-02-03' and '2017-02-01'",0.0006699562072753906,2.86102294921875e-06
 "SELECT date, COUNT(*)
 FROM (SELECT PMAM.person_id, MIN(date) AS date
 FROM person_meeting_attendance_myisam PMAM
 force index (person_meeting_attendance_myisam_village_id)
 GROUP BY person_id) as tab1
 GROUP BY date
-HAVING date between '2016-02-03' and '2017-02-01'",78.0907199382782,0.000141143798828125
+HAVING date between '2016-02-03' and '2017-02-01'",78.77511286735535,0.00013589859008789062
+"SELECT country_id as id, SUM(total_videos_produced) as tot_pro
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",1.4808399677276611,3.814697265625e-06
+"SELECT country_id as id, SUM(total_screening) as tot_scr
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",1.4805829524993896,4.0531158447265625e-06
+"SELECT country_id as id, SUM(total_adoption) as tot_ado
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",1.4802870750427246,4.0531158447265625e-06
+"SELECT country_id as id, COUNT(DISTINCT VIDM.practice_id) as tot_pra
+FROM video_myisam VIDM
+WHERE VIDM.video_production_date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",0.0006411075592041016,2.1457672119140625e-06
+"SELECT country_id as id, COUNT(DISTINCT PMAM.person_id) as tot_per
+FROM person_meeting_attendance_myisam PMAM
+force index (person_meeting_attendance_myisam_village_id)
+WHERE PMAM.date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",6.157365083694458,4.0531158447265625e-06
+"SELECT country_id as id, COUNT(DISTINCT SCM.village_id) as tot_vil
+FROM screening_myisam SCM
+force index (screening_myisam_village_id)
+WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'
+GROUP BY country_id
+ORDER BY country_id",0.2653839588165283,3.814697265625e-06
+"SELECT DISTINCT C.id, COUNTRY_NAME AS name
+FROM geographies_COUNTRY C",0.0004608631134033203,3.2901763916015625e-05
+"SELECT COUNT(DISTINCT group_id) AS tot_pg
+FROM screening_myisam SCM
+force index (screening_myisam_village_id)
+WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.2222440242767334,6.9141387939453125e-06
+"SELECT COUNT(DISTINCT village_id) as count
+FROM screening_myisam SCM
+force index (screening_myisam_village_id)
+WHERE SCM.date BETWEEN '2016-12-03' AND '2017-02-01'",0.3877589702606201,6.9141387939453125e-06
+"SELECT SUM(VPC.total_screening) as tot_scr, SUM(VPC.total_attendance) as tot_att
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+WHERE VPC.date BETWEEN '2016-02-03' AND '2017-02-01'",0.9031410217285156,7.867813110351562e-06
+"SELECT SUM(total_adopted_attendees) AS tot_adopt_per , SUM(total_active_attendees) AS tot_per, SUM(total_adoption_by_active) AS tot_active_adop
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+WHERE date = '2017-02-01'",0.4854569435119629,7.867813110351562e-06
+"SELECT COUNT(DISTINCT SCM.video_id) AS count
+FROM screening_myisam SCM
+force index (screening_myisam_village_id)
+WHERE SCM.date BETWEEN '2016-02-03' AND '2017-02-01'",0.20159482955932617,7.867813110351562e-06
+"SELECT DISTINCT vcp.partner_id, P.PARTNER_NAME
+FROM village_precalculation_copy vcp
+JOIN programs_PARTNER P ON P.id = vcp.partner_id
+ORDER BY P.PARTNER_NAME",4.411706924438477,9.393692016601562e-05
+"SELECT date, SUM(total_videos_produced)
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+GROUP BY date
+HAVING date between '2016-02-03' and '2017-02-01'",2.599532127380371,0.00018310546875
+"SELECT date, SUM(total_screening)
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+GROUP BY date
+HAVING date between '2016-02-03' and '2017-02-01'",2.5734939575195312,0.00020599365234375
+"SELECT date, SUM(total_adoption)
+FROM village_precalculation_copy VPC
+force index (village_precalculation_copy_village_id)
+GROUP BY date
+HAVING date between '2016-02-03' and '2017-02-01'",2.5714011192321777,0.0001990795135498047
+"SELECT date, COUNT(*)
+FROM (SELECT VIDM.practice_id, MIN(video_production_date) AS date
+FROM video_myisam VIDM
+GROUP BY practice_id) as tab1
+GROUP BY date
+HAVING date between '2016-02-03' and '2017-02-01'",0.0006318092346191406,2.86102294921875e-06
+"SELECT date, COUNT(*)
+FROM (SELECT PMAM.person_id, MIN(date) AS date
+FROM person_meeting_attendance_myisam PMAM
+force index (person_meeting_attendance_myisam_village_id)
+GROUP BY person_id) as tab1
+GROUP BY date
+HAVING date between '2016-02-03' and '2017-02-01'",78.81798195838928,0.00013399124145507812
