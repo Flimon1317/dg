@@ -5,6 +5,45 @@ import pandas as pd
 import numpy as np
 from loop.models import CombinedTransaction
 
+aggregations = {
+    'quantity':{
+        'quantity__sum':'sum'
+    },
+    'amount':{
+        'amount__sum':'sum'
+    },
+    'gaddidar_share':{
+        'gaddidar_share__sum':'sum'
+    },
+    'aggregator_incentive':{
+        'aggregator_incentive__sum':'mean'
+    },
+    'transportation_cost':{
+        'transportation_cost__sum':'mean'
+    },
+    'farmer_share':{
+        'farmer_share__sum':'mean'
+    }
+}
+
+aggregate_cumm_vol_farmer = {
+    'quantity':{
+        'quantity__sum':'sum'
+    },
+    'cum_distinct_farmer':{
+        'cum_vol_farmer':'mean'
+    }
+}
+
+def fetch_myisam_data():
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+
+    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
+    return df_result
+
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
     # end_date = df_result_aggregate['date'].max()
@@ -36,43 +75,8 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-
 def get_data_from_myisam(get_total):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
-
-    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
-    aggregations = {
-        'quantity':{
-            'quantity__sum':'sum'
-        },
-        'amount':{
-            'amount__sum':'sum'
-        },
-        'gaddidar_share':{
-            'gaddidar_share__sum':'sum'
-        },
-        'aggregator_incentive':{
-            'aggregator_incentive__sum':'mean'
-        },
-        'transportation_cost':{
-            'transportation_cost__sum':'mean'
-        },
-        'farmer_share':{
-            'farmer_share__sum':'mean'
-        }
-    }
-
-    aggregate_cumm_vol_farmer = {
-        'quantity':{
-            'quantity__sum':'sum'
-        },
-        'cum_distinct_farmer':{
-            'cum_vol_farmer':'mean'
-        }
-    }
+    df_result = fetch_myisam_data()
 
     # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
     df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
@@ -100,3 +104,11 @@ def get_data_from_myisam(get_total):
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
         dictionary = df.to_dict(orient='index')
     return dictionary, cumm_vol_farmer
+
+def time_series_data(start_date, end_date, aggregator_ids, mandi_ids, gaddidar_ids):
+    df_result = fetch_myisam_data()
+    df_result = df_result.filter(aggregator_id=aggregator_ids, mandi_id=mandi_ids, gaddidar_id=gaddidar_ids)
+    df_result_aggregate = df_result.groupby('date').agg(aggregations).reset_index()
+    df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+    dictionary = df_result_aggregate.to_dict(orient='index')
+    return dictionary

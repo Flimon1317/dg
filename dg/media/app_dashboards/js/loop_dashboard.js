@@ -1663,7 +1663,6 @@ function fill_crop_drop_down() {
 //To show time series graohs for volumr,amount,farmer count, cpk,spk
 function show_line_graphs() {
     var json_data = line_json_data.aggregator_data;
-    // var farmer_data = line_json_data.farmer;
     var transport_data = line_json_data.transport_data;
     var dates_and_farmer_count = line_json_data.dates;
     var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
