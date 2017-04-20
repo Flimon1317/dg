@@ -1,0 +1,84 @@
+[2017-04-20 14:53:12,441] {jobs.py:343} DagFileProcessor0 INFO - Started process (PID=9780) to work on /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:12,443] {jobs.py:534} DagFileProcessor0 ERROR - Cannot use more than 1 thread when using sqlite. Setting max_threads to 1
+[2017-04-20 14:53:12,445] {jobs.py:1521} DagFileProcessor0 INFO - Processing file /home/abhishek/Documents/dg/airflow/dags/abcd.py for tasks to queue
+[2017-04-20 14:53:12,445] {models.py:167} DagFileProcessor0 INFO - Filling up the DagBag from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:12,663] {jobs.py:1535} DagFileProcessor0 INFO - DAG(s) ['example_skip_dag', 'sample', 'test_utils', 'example_subdag_operator.section-2', 'example_subdag_operator.section-1', 'example_branch_dop_operator_v3', 'example_passing_params_via_test_command', 'example_python_operator', 'example_bash_operator', 'latest_only_with_trigger', 'example_trigger_target_dag', 'example_branch_operator', 'example_subdag_operator', 'latest_only', 'example_http_operator', 'example_xcom', 'tutorial', 'example_trigger_controller_dag', 'example_short_circuit_operator'] retrieved from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_stats.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_run.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+[2017-04-20 14:53:15,392] {models.py:322} DagFileProcessor0 INFO - Finding 'running' jobs without a recent heartbeat
+[2017-04-20 14:53:15,392] {models.py:328} DagFileProcessor0 INFO - Failing jobs without heartbeat after 2017-04-20 14:48:15.392816
+[2017-04-20 14:53:15,397] {jobs.py:351} DagFileProcessor0 INFO - Processing /home/abhishek/Documents/dg/airflow/dags/abcd.py took 2.955 seconds
+[2017-04-20 14:53:16,451] {jobs.py:343} DagFileProcessor1 INFO - Started process (PID=9783) to work on /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:16,453] {jobs.py:534} DagFileProcessor1 ERROR - Cannot use more than 1 thread when using sqlite. Setting max_threads to 1
+[2017-04-20 14:53:16,454] {jobs.py:1521} DagFileProcessor1 INFO - Processing file /home/abhishek/Documents/dg/airflow/dags/abcd.py for tasks to queue
+[2017-04-20 14:53:16,454] {models.py:167} DagFileProcessor1 INFO - Filling up the DagBag from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:16,652] {jobs.py:1535} DagFileProcessor1 INFO - DAG(s) ['example_skip_dag', 'sample', 'test_utils', 'example_subdag_operator.section-2', 'example_subdag_operator.section-1', 'example_branch_dop_operator_v3', 'example_passing_params_via_test_command', 'example_python_operator', 'example_bash_operator', 'latest_only_with_trigger', 'example_trigger_target_dag', 'example_branch_operator', 'example_subdag_operator', 'latest_only', 'example_http_operator', 'example_xcom', 'tutorial', 'example_trigger_controller_dag', 'example_short_circuit_operator'] retrieved from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_stats.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_run.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+[2017-04-20 14:53:19,708] {models.py:322} DagFileProcessor1 INFO - Finding 'running' jobs without a recent heartbeat
+[2017-04-20 14:53:19,708] {models.py:328} DagFileProcessor1 INFO - Failing jobs without heartbeat after 2017-04-20 14:48:19.708478
+[2017-04-20 14:53:19,712] {jobs.py:351} DagFileProcessor1 INFO - Processing /home/abhishek/Documents/dg/airflow/dags/abcd.py took 3.262 seconds
+[2017-04-20 14:53:20,853] {jobs.py:343} DagFileProcessor2 INFO - Started process (PID=9785) to work on /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:20,854] {jobs.py:534} DagFileProcessor2 ERROR - Cannot use more than 1 thread when using sqlite. Setting max_threads to 1
+[2017-04-20 14:53:20,855] {jobs.py:1521} DagFileProcessor2 INFO - Processing file /home/abhishek/Documents/dg/airflow/dags/abcd.py for tasks to queue
+[2017-04-20 14:53:20,856] {models.py:167} DagFileProcessor2 INFO - Filling up the DagBag from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:21,041] {jobs.py:1535} DagFileProcessor2 INFO - DAG(s) ['example_skip_dag', 'sample', 'test_utils', 'example_subdag_operator.section-2', 'example_subdag_operator.section-1', 'example_branch_dop_operator_v3', 'example_passing_params_via_test_command', 'example_python_operator', 'example_bash_operator', 'latest_only_with_trigger', 'example_trigger_target_dag', 'example_branch_operator', 'example_subdag_operator', 'latest_only', 'example_http_operator', 'example_xcom', 'tutorial', 'example_trigger_controller_dag', 'example_short_circuit_operator'] retrieved from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_stats.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_run.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+[2017-04-20 14:53:23,732] {models.py:322} DagFileProcessor2 INFO - Finding 'running' jobs without a recent heartbeat
+[2017-04-20 14:53:23,733] {models.py:328} DagFileProcessor2 INFO - Failing jobs without heartbeat after 2017-04-20 14:48:23.733226
+[2017-04-20 14:53:23,738] {jobs.py:351} DagFileProcessor2 INFO - Processing /home/abhishek/Documents/dg/airflow/dags/abcd.py took 2.885 seconds
+[2017-04-20 14:53:24,765] {jobs.py:343} DagFileProcessor3 INFO - Started process (PID=9795) to work on /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:24,767] {jobs.py:534} DagFileProcessor3 ERROR - Cannot use more than 1 thread when using sqlite. Setting max_threads to 1
+[2017-04-20 14:53:24,768] {jobs.py:1521} DagFileProcessor3 INFO - Processing file /home/abhishek/Documents/dg/airflow/dags/abcd.py for tasks to queue
+[2017-04-20 14:53:24,769] {models.py:167} DagFileProcessor3 INFO - Filling up the DagBag from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:24,954] {jobs.py:1535} DagFileProcessor3 INFO - DAG(s) ['example_skip_dag', 'sample', 'test_utils', 'example_subdag_operator.section-2', 'example_subdag_operator.section-1', 'example_branch_dop_operator_v3', 'example_passing_params_via_test_command', 'example_python_operator', 'example_bash_operator', 'latest_only_with_trigger', 'example_trigger_target_dag', 'example_branch_operator', 'example_subdag_operator', 'latest_only', 'example_http_operator', 'example_xcom', 'tutorial', 'example_trigger_controller_dag', 'example_short_circuit_operator'] retrieved from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_stats.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/default_comparator.py:161: SAWarning: The IN-predicate on "dag_run.dag_id" was invoked with an empty sequence. This results in a contradiction, which nonetheless can be expensive to evaluate.  Consider alternative strategies for improved performance.
+  'strategies for improved performance.' % expr)
+[2017-04-20 14:53:28,213] {models.py:322} DagFileProcessor3 INFO - Finding 'running' jobs without a recent heartbeat
+[2017-04-20 14:53:28,213] {models.py:328} DagFileProcessor3 INFO - Failing jobs without heartbeat after 2017-04-20 14:48:28.213955
+[2017-04-20 14:53:28,218] {jobs.py:351} DagFileProcessor3 INFO - Processing /home/abhishek/Documents/dg/airflow/dags/abcd.py took 3.453 seconds
+[2017-04-20 14:53:29,367] {jobs.py:343} DagFileProcessor4 INFO - Started process (PID=9797) to work on /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:29,370] {jobs.py:534} DagFileProcessor4 ERROR - Cannot use more than 1 thread when using sqlite. Setting max_threads to 1
+[2017-04-20 14:53:29,372] {jobs.py:1521} DagFileProcessor4 INFO - Processing file /home/abhishek/Documents/dg/airflow/dags/abcd.py for tasks to queue
+[2017-04-20 14:53:29,372] {models.py:167} DagFileProcessor4 INFO - Filling up the DagBag from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:29,558] {jobs.py:1535} DagFileProcessor4 INFO - DAG(s) ['example_skip_dag', 'sample', 'test_utils', 'example_subdag_operator.section-2', 'example_subdag_operator.section-1', 'example_branch_dop_operator_v3', 'example_passing_params_via_test_command', 'example_python_operator', 'example_bash_operator', 'latest_only_with_trigger', 'example_trigger_target_dag', 'example_branch_operator', 'example_subdag_operator', 'latest_only', 'example_http_operator', 'example_xcom', 'tutorial', 'example_trigger_controller_dag', 'example_short_circuit_operator'] retrieved from /home/abhishek/Documents/dg/airflow/dags/abcd.py
+[2017-04-20 14:53:29,841] {jobs.py:354} DagFileProcessor4 ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/airflow/jobs.py", line 346, in helper
+    pickle_dags)
+  File "/usr/local/lib/python2.7/dist-packages/airflow/utils/db.py", line 53, in wrapper
+    result = func(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/airflow/jobs.py", line 1544, in process_file
+    models.DAG.sync_to_db(dag, dag.owner, sync_time)
+  File "/usr/local/lib/python2.7/dist-packages/airflow/utils/db.py", line 53, in wrapper
+    result = func(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/airflow/models.py", line 3421, in sync_to_db
+    session.commit()
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/session.py", line 874, in commit
+    self.transaction.commit()
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/session.py", line 465, in commit
+    t[1].commit()
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/base.py", line 1632, in commit
+    self._do_commit()
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/base.py", line 1663, in _do_commit
+    self.connection._commit_impl()
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/base.py", line 723, in _commit_impl
+    self._handle_dbapi_exception(e, None, None, None, None)
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/base.py", line 1405, in _handle_dbapi_exception
+    util.reraise(*exc_info)
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/base.py", line 721, in _commit_impl
+    self.engine.dialect.do_commit(self.connection)
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/engine/default.py", line 443, in do_commit
+    dbapi_connection.commit()
+  File "/usr/local/lib/python2.7/dist-packages/airflow/bin/cli.py", line 69, in sigint_handler
+    sys.exit(0)
+SystemExit: 0
