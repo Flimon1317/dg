@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from models import *
 
@@ -40,25 +42,24 @@ class LoopAdmin(AdminSite):
         return request.user.is_active
 
 
-class LoopUserAssignedMandis(admin.StackedInline):
-    model = LoopUserAssignedMandi
-    extra = 4
+# class LoopUserAssignedMandis(admin.StackedInline):
+#     model = LoopUserAssignedMandi
+#     extra = 4
+#
+# class LoopUserAssignedVillages(admin.StackedInline):
+#     model = LoopUserAssignedVillage
+#     extra = 4
 
-class LoopUserAssignedVillages(admin.StackedInline):
-    model = LoopUserAssignedVillage
-    extra = 4
+class LoopUserForm(forms.ModelForm):
+    assigned_villages = forms.ModelMultipleChoiceField(queryset=Village.objects.all(), widget=FilteredSelectMultiple("Villages",is_stacked=False), label='Villages To Assign')
+    assigned_mandis = forms.ModelMultipleChoiceField(queryset=Mandi.objects.all(), widget=FilteredSelectMultiple("Mandis",is_stacked=False), label='Mandis To Assign')
 
 class LoopUserAdmin(admin.ModelAdmin):
-    inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
+    # inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
+    # fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
+    form = LoopUserForm
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
-
-# class LoopUserInline(admin.TabularInline):
-#     model = LoopUser
-#     extra = 5
-#     exclude = ('assigned_mandis', 'assigned_villages')
-
 
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'phone', '__village__')
