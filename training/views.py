@@ -53,7 +53,7 @@ def extractFiltersFromRequest(request):
         end_date = str(request.GET['end_date'])
     else:
         start_date = '2015-01-01'
-        end_date = '2017-04-04'
+        end_date = '2017-05-30'
     if 'apply_filter' in request.GET:
         apply_filter = True if request.GET['apply_filter'] == 'true' else False
     else :
@@ -78,6 +78,16 @@ def extractFiltersFromRequest(request):
 
     return filter_args
 
+def getPandasDataframe(sql_query):
+    db_connection = MySQLdb.connect(host='localhost',
+                                        user=DATABASES['default']['USER'],
+                                        passwd=DATABASES['default']['PASSWORD'],
+                                        db=DATABASES['default']['NAME'],
+                                        charset='utf8',
+                                        use_unicode=True)
+    result = pandas.read_sql_query(sql_query, con=db_connection)
+    return result
+
 @csrf_exempt
 def getFilterData(request):
     trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
@@ -95,9 +105,19 @@ def getData(request):
     filter_args = extractFiltersFromRequest(request)
     query_list = []
 
+    recent_days_count = [120,180,365]
+    recent_data_dict = {}
+
     # No of Trainings
     training_query = get_training_data_sql(**filter_args)
-    query_list.extend(training_query)
+    result = getPandasDataframe(training_query)
+    result['date'] = result['date'].astype('datetime64[ns]')
+    for days in recent_days_count:
+        today = datetime.datetime.today() - datetime.timedelta(days=days)
+        data = pandas.Series(pandas.DataFrame(result.where((result['date'] >= today))).sum(numeric_only=True))
+        recent_data_dict[str(days) + 'days'] = []
+        recent_data_dict[str(days) + 'days'].append({'placeHolder':'recent','tagName':'Number of Trainings','value':data['Trainings']})
+    # query_list.extend(training_query)
 
     # No of Mediators
     mediator_query = get_mediators_data_sql(**filter_args)
@@ -377,15 +397,9 @@ def graph_data(request):
     filter_args = extractFiltersFromRequest(request)
 
     final_data_list = {}
-    db_connection = MySQLdb.connect(host='localhost',
-                                        user=DATABASES['default']['USER'],
-                                        passwd=DATABASES['default']['PASSWORD'],
-                                        db=DATABASES['default']['NAME'],
-                                        charset='utf8',
-                                        use_unicode=True)
 
     sql_query = get_graphs_query(**filter_args)
-    result = pandas.read_sql_query(sql_query, con=db_connection)
+    result = getPandasDataframe(sql_query)
 
     if filter_args['chart_name'] != 'state__#trainings':
         data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)

@@ -6,22 +6,23 @@ def read_kwargs(Kwargs):
 def get_training_data_sql(**Kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(Kwargs)
 
-    sql_query_list = []
-    args_list = []
+    # sql_query_list = []
+    # args_list = []
 
     # No. of Trainings
     args_dict = {}
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('count(distinct tt.id)')
+    sql_ds['select'].append('count(distinct tt.id) as Trainings, tt.date')
     sql_ds['from'].append('training_training tt')
     sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id'])
-    sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Number of Trainings'
-    args_dict['component'] = 'overall'
-    args_dict['query_string'] = sql_q
-    args_dict['apply_filter'] = apply_filter
-    if args_dict['apply_filter'] is False :
-        args_list.append(args_dict.copy())
+    sql_ds['group by'].append('tt.date')
+    # sql_q = join_sql_ds(sql_ds)
+    # args_dict['query_tag'] = 'Number of Trainings'
+    # args_dict['component'] = 'overall'
+    # args_dict['query_string'] = sql_q
+    # args_dict['apply_filter'] = apply_filter
+    # if args_dict['apply_filter'] is False :
+    #     args_list.append(args_dict.copy())
 
     if apply_filter:
         if len(trainers_list) > 0:
@@ -35,13 +36,11 @@ def get_training_data_sql(**Kwargs):
         sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
 
     sql_q = join_sql_ds(sql_ds)
-    # args_dict['query_tag'] = 'No. of Trainings'
-    args_dict['component'] = 'recent'
-    args_dict['query_string'] = sql_q
-    # args_dict['apply_filter'] = True
-    args_list.append(args_dict.copy())
-
-    return args_list
+    # args_dict['component'] = 'recent'
+    # args_dict['query_string'] = sql_q
+    # args_list.append(args_dict.copy())
+    return sql_q
+    # return args_list
 
 def get_mediators_data_sql(**Kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(Kwargs)
