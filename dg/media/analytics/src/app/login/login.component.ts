@@ -7,10 +7,10 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   @ViewChild('childModal') public childModal: ModalDirective;
-  constructor() { }
-
+  userDetail = { username: "", password: "" }
+  // username: string = "";
+  // password: string = "";
   ngOnInit() {
   }
 
@@ -22,4 +22,7 @@ export class LoginComponent implements OnInit {
     this.childModal.hide();
   }
 
+  initiate_login(): void {
+    console.log(this.userDetail.username, this.userDetail.password);
+  }
 }
