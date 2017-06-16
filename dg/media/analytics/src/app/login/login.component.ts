@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit {
   }
 
   initiate_login(): void {
+    localStorage.setItem('Username', JSON.stringify(this.userDetail.username));
     console.log(this.userDetail.username, this.userDetail.password);
+    console.log(localStorage.getItem('Username'));
   }
 }
