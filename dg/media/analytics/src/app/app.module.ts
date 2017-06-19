@@ -9,6 +9,7 @@ import { ChartModule } from 'angular2-highcharts'
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule, ModalModule } from 'ngx-bootstrap';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -61,6 +62,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MyDatePickerModule,
     ButtonsModule.forRoot(),
     ModalModule.forRoot(),
+    BsDropdownModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
   ],

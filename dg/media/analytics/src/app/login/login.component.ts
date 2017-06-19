@@ -32,6 +32,12 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('FullName', JSON.stringify(val.full_name));
       localStorage.setItem('PhoneNumber', JSON.stringify(val.phone_number));
       this.hideChildModal();
+      this.username = JSON.stringify(val.full_name);
     });
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.username = "";
   }
 }
