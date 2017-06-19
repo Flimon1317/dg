@@ -1,4 +1,5 @@
-<div class="col-sm-1 pull-right login-button" (click)="showChildModal()">Login</div>
+<div class="col-sm-2 pull-right login-button" *ngIf="username?.length > 0">{{username | slice:1:username?.length-1}}</div>
+<div class="col-sm-1 pull-right login-button" (click)="showChildModal()" *ngIf="username?.length == 0">Login</div>
 
 <div bsModal #childModal="bs-modal" class="modal" tabindex="-1" role="dialog" aria-hidden="true" [config]="{backdrop: 'static'}">
   <div class="modal-dialog modal-sm">

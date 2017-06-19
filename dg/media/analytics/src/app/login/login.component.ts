@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -9,9 +10,11 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class LoginComponent implements OnInit {
   @ViewChild('childModal') public childModal: ModalDirective;
   userDetail = { username: "", password: "" }
-  // username: string = "";
-  // password: string = "";
+  username: string = "";
+  constructor(private loginService: LoginService) { }
+
   ngOnInit() {
+    this.username = localStorage.getItem('FullName');
   }
 
   public showChildModal(): void {
@@ -23,8 +26,12 @@ export class LoginComponent implements OnInit {
   }
 
   initiate_login(): void {
-    localStorage.setItem('Username', JSON.stringify(this.userDetail.username));
-    console.log(this.userDetail.username, this.userDetail.password);
-    console.log(localStorage.getItem('Username'));
+    this.loginService.login(this.userDetail).subscribe(val => {
+      localStorage.setItem('ApiKey', JSON.stringify(val.key));
+      localStorage.setItem('UserName', JSON.stringify(val.user_name));
+      localStorage.setItem('FullName', JSON.stringify(val.full_name));
+      localStorage.setItem('PhoneNumber', JSON.stringify(val.phone_number));
+      this.hideChildModal();
+    });
   }
 }
