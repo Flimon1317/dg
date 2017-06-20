@@ -31,3 +31,7 @@
 label {
   font-size: 12pt;
 }
+
+ul>li>a {
+  -webkit-text-fill-color: black;
+}
