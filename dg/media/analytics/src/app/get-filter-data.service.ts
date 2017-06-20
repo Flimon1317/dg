@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Request, Headers } from '@angular/http';
+import { Http, Request } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -10,12 +9,12 @@ import { environment } from '../environments/environment.loop';
 @Injectable()
 export class GetFilterDataService {
   _baseUrl: string = environment.url + "get_filter_data";
-  private _request = new Request({
-    method: 'GET',
-    url: this._baseUrl
-  });
-
-  data: any;
+  // private _request = new Request({
+  //   method: 'GET',
+  //   url: this._baseUrl
+  // });
+  //
+  // data: any;
 
   constructor(private http: Http) { }
 
