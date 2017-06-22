@@ -122,8 +122,13 @@ def get_overall_data(request):
     avg_score_query = get_avg_score_data_sql(**filter_args)
     query_list.extend(avg_score_query)
 
+    # Farmers Reached
+    farmers_reached_query = get_farmers_reached_Sql(**filter_args)
+    query_list.extend(farmers_reached_query)
+
     results = multiprocessing_list(query_list = query_list)
     data = json.dumps({'data' : results})
+
     return HttpResponse(data)
 
 def question_wise_data(chart_name, result):
@@ -242,6 +247,17 @@ def year_month_wise_data(chart_name, result):
         final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
+def farmers_reached_data(chart_name, result):
+    outer_data = {'outerData':{'series':[]}}
+    data_list = {}
+    temp_dict_outer = {'data':[]}
+    for index, row in result.iterrows():
+        print row['Count'], row['Gender']
+        temp_dict_outer['data'].append({'name':row['Gender'], 'y':row['Count']})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+    data_list[chart_name] = outer_data
+    return data_list
+
 def graph_data(request):
     filter_args = extract_filters_request(request)
 
@@ -263,6 +279,12 @@ def graph_data(request):
         sql_query = year_month_wise_data_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
         data_to_send = year_month_wise_data(filter_args['chart_name'], result)
+
+    elif filter_args['chart_name'] in ['Farmers_reached']:
+        sql_query = farmers_reached_graph_query(**filter_args)
+        result = get_pandas_dataframe(sql_query)
+        data_to_send = farmers_reached_data(filter_args['chart_name'], result)
+        print data_to_send
 
     return HttpResponse(json.dumps(data_to_send))
 

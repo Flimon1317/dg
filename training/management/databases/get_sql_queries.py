@@ -16,7 +16,7 @@ def get_training_data_sql(**Kwargs):
     sql_ds['from'].append('training_training tt')
     sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id'])
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Number of Trainings'
+    args_dict['query_tag'] = 'No. of Trainings'
     args_dict['component'] = 'overall'
     args_dict['query_string'] = sql_q
     args_dict['apply_filter'] = apply_filter
@@ -56,7 +56,7 @@ def get_mediators_data_sql(**Kwargs):
     sql_ds['from'].append('training_score ts')
     sql_ds['where'].append('ts.score in (0, 1)')
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Number of Mediators'
+    args_dict['query_tag'] = 'No. of Mediators'
     args_dict['component'] = 'overall'
     args_dict['query_string'] = sql_q
     args_dict['apply_filter'] = apply_filter
@@ -285,4 +285,77 @@ def year_month_wise_data_query(**kwargs):
             sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
 
     sql_q = join_sql_ds(sql_ds)
+    return sql_q
+
+
+
+def get_farmers_reached_Sql(**Kwargs):
+    start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(Kwargs)
+
+    sql_query_list = []
+    args_list = []
+
+    # No. of Trainings
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct pma.person_id)')
+    sql_ds['from'].append('activities_screening scr')
+    sql_ds['join'].append(['activities_personmeetingattendance pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
+    sql_ds['join'].append(['training_training_participants ttps', 'ttps.animator_id = scr.animator_id'])
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'Farmers reached'
+    args_dict['component'] = 'overall'
+    args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = apply_filter
+    if args_dict['apply_filter'] is False :
+        args_list.append(args_dict.copy())
+
+    # if apply_filter:
+    #     if len(trainers_list) > 0:
+    #         sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+    #         sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+    #     if len(states_list) > 0:
+    #         sql_ds['join'].append(['people_animator pa', 'pa.id = ts.participant_id'])
+    #         sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
+    #         sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
+    #         sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    # sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+
+    sql_q = join_sql_ds(sql_ds)
+    # args_dict['query_tag'] = 'No. of Trainings'
+    args_dict['component'] = 'recent'
+    args_dict['query_string'] = sql_q
+    # args_dict['apply_filter'] = True
+    args_list.append(args_dict.copy())
+
+    return args_list
+
+
+def farmers_reached_graph_query(**Kwargs):
+    start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(Kwargs)
+
+    sql_query_list = []
+    args_list = []
+
+    # No. of Trainings
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('''pp.gender Gender''')
+    sql_ds['select'].append('''count(distinct pma.person_id) Count''')
+    sql_ds['from'].append('activities_screening scr')
+    sql_ds['join'].append(['activities_personmeetingattendance pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
+    sql_ds['join'].append(['training_training_participants ttps', 'ttps.animator_id = scr.animator_id'])
+    sql_ds['join'].append(['people_person pp',' pp.id = pma.person_id'])
+    sql_ds['group by'].append('pp.gender')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'Farmers reached'
+    args_dict['component'] = 'overall'
+    args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = apply_filter
+    if args_dict['apply_filter'] is False :
+        args_list.append(args_dict.copy())
+    
+    sql_q = join_sql_ds(sql_ds)
+    print sql_q
     return sql_q

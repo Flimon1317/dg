@@ -174,5 +174,41 @@ export const chartsConfig = {
                                 drillUpText: '<< Back'
                           },
         },
+
+    'Farmers_reached' : {
+                          chart: {
+                                  type: 'pie',
+                                  renderTo: 'graph_5',
+                                  tab: {
+                                        'id': 'tab4',
+                                        'class':'col-sm-12'
+                                  },
+                                  plotBackgroundColor: null,
+                                  plotBorderWidth: null,
+                                  plotShadow: false,
+                          },
+                          credits:{ enabled: false },
+                          title: { text: 'Farmers Reached'},
+                          xAxis: { type: 'category' },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                                style: {
+                                                    color: 'black'
+                                                }
+                                            }
+                                        }
+                          },
+                          tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                          },
+                          series: [],
+  },
+  
   
 }

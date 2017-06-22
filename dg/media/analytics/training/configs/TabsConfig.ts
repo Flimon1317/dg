@@ -12,5 +12,9 @@ export const tabsConfig = {
     'tab3':{
             'heading':'Time Period',
             'showDivs':[]
+           },
+    'tab4':{
+            'heading':'Farmers Reached',
+            'showDivs':[]
            }
 }
