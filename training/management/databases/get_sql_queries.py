@@ -298,9 +298,9 @@ def get_farmers_reached_Sql(**Kwargs):
     # No. of Trainings
     args_dict = {}
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('count(distinct pma.person_id)')
+    sql_ds['select'].append('''count(distinct pma.person_id) Count''')
     sql_ds['from'].append('activities_screening scr')
-    sql_ds['join'].append(['activities_personmeetingattendance pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
+    sql_ds['join'].append(['person_meeting_attendance_myisam pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
     sql_ds['join'].append(['training_training_participants ttps', 'ttps.animator_id = scr.animator_id'])
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Farmers reached'
@@ -341,13 +341,12 @@ def farmers_reached_graph_query(**Kwargs):
     # No. of Trainings
     args_dict = {}
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('''pp.gender Gender''')
+    sql_ds['select'].append('''pma.gender Gender''')
     sql_ds['select'].append('''count(distinct pma.person_id) Count''')
     sql_ds['from'].append('activities_screening scr')
-    sql_ds['join'].append(['activities_personmeetingattendance pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
+    sql_ds['join'].append(['person_meeting_attendance_myisam pma', 'pma.screening_id = scr.id and scr.date > 20150101'])
     sql_ds['join'].append(['training_training_participants ttps', 'ttps.animator_id = scr.animator_id'])
-    sql_ds['join'].append(['people_person pp',' pp.id = pma.person_id'])
-    sql_ds['group by'].append('pp.gender')
+    sql_ds['group by'].append('pma.gender')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Farmers reached'
     args_dict['component'] = 'overall'
@@ -355,6 +354,8 @@ def farmers_reached_graph_query(**Kwargs):
     args_dict['apply_filter'] = apply_filter
     if args_dict['apply_filter'] is False :
         args_list.append(args_dict.copy())
+    
+
     
     sql_q = join_sql_ds(sql_ds)
     print sql_q
