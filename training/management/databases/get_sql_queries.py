@@ -310,23 +310,19 @@ def get_farmers_reached_Sql(**Kwargs):
     if args_dict['apply_filter'] is False :
         args_list.append(args_dict.copy())
 
-    # if apply_filter:
-    #     if len(trainers_list) > 0:
-    #         sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
-    #         sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
-    #     if len(states_list) > 0:
-    #         sql_ds['join'].append(['people_animator pa', 'pa.id = ts.participant_id'])
-    #         sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
-    #         sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
-    #         sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
-
-    # sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_ds['join'].append(['training_training tt', 'tt.id = ttps.training_id'])
+    sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    
+    if apply_filter:
+        if len(trainers_list) > 0:
+            sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+            sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+        if len(states_list) > 0:
+            sql_ds['where'].append('pma.state_id in (' + ",".join(states_list) + ')')
 
     sql_q = join_sql_ds(sql_ds)
-    # args_dict['query_tag'] = 'No. of Trainings'
     args_dict['component'] = 'recent'
     args_dict['query_string'] = sql_q
-    # args_dict['apply_filter'] = True
     args_list.append(args_dict.copy())
 
     return args_list
@@ -355,8 +351,15 @@ def farmers_reached_graph_query(**Kwargs):
     if args_dict['apply_filter'] is False :
         args_list.append(args_dict.copy())
     
+    if apply_filter:
+        sql_ds['join'].append(['training_training tt', 'tt.id = ttps.training_id'])
+        sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+        if len(trainers_list) > 0:
+            sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+            sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+        if len(states_list) > 0:
+            sql_ds['where'].append('pma.state_id in (' + ",".join(states_list) + ')')
 
-    
     sql_q = join_sql_ds(sql_ds)
     print sql_q
     return sql_q

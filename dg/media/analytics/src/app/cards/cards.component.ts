@@ -37,7 +37,8 @@ export class CardsComponent implements OnInit {
         let options = {
             webUrl: environment.url+"getData",
             params: {
-              apply_filter: false,
+                apply_filter: false,
+                'cardName': '',
             }
         }
         this.getData(options);
@@ -45,13 +46,7 @@ export class CardsComponent implements OnInit {
 
     public getData(options): any {
         Object.keys(this.cardsConfigs).forEach(key => {
-            let options = {
-                webUrl: environment.url+"getData",
-                params: {
-                  apply_filter: false,
-                  'cardName': key,
-                }
-            }
+            options.params.cardName = key;
             this.cardsService.getApiData(options)
                 .subscribe(dataList => {
                     dataList['data'].forEach( cardData => {
