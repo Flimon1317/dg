@@ -26,7 +26,7 @@ export const cardConfig = {
                         },
                    },
 
-    'pass_%':      {
+    'pass_perc':      {
                         text:'Pass Percentage',
                         overall : {
                             filter:false,

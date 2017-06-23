@@ -44,25 +44,34 @@ export class CardsComponent implements OnInit {
     }
 
     public getData(options): any {
-        this.cardsService.getApiData(options)
-          .subscribe(dataList => {
-              dataList['data'].forEach(cardData => {
-                  if(cardData.placeHolder == "overall") {
-                      this.cardsOverall.forEach(card => {
-                        if(cardData.tagName === card.text){
-                          card['value'] = cardData.value;
+        Object.keys(this.cardsConfigs).forEach(key => {
+            let options = {
+                webUrl: environment.url+"getData",
+                params: {
+                  apply_filter: false,
+                  'cardName': key,
+                }
+            }
+            this.cardsService.getApiData(options)
+                .subscribe(dataList => {
+                    dataList['data'].forEach( cardData => {
+                        if(cardData.placeHolder == "overall") {
+                            this.cardsOverall.forEach(card => {
+                                if(card.text == cardData.tagName) {
+                                    card['value'] = cardData.value
+                                }
+                            });
                         }
-                      });
-                  }
-                  else {
-                      this.cardsRecent.forEach(card => {
-                        if(cardData.tagName === card.text){
-                          card['value'] = cardData.value;
+                        if(cardData.placeHolder == "recent") {
+                            this.cardsRecent.forEach(card => {
+                                if(card.text == cardData.tagName) {
+                                    card['value'] = cardData.value
+                                }
+                            });
                         }
-                      });
-                  }         
-              });
-          });
+                    });
+            });
+        });
     }
 }
 

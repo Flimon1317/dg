@@ -65,6 +65,10 @@ def extract_filters_request(request):
     else:
         chart_type = ''
         chart_name = ''
+    if 'cardName' in request.GET:
+        cardName = str(request.GET.get('cardName'))
+    else:
+        cardName = ''
     trainers_list = request.GET.getlist('Trainer')
     states_list = request.GET.getlist('State')
 
@@ -76,7 +80,7 @@ def extract_filters_request(request):
     filter_args['states_list'] = states_list
     filter_args['chart_name'] = chart_name
     filter_args['chart_type'] = chart_type
-
+    filter_args['cardName'] = cardName
     return filter_args
 
 def get_pandas_dataframe(sql_query):
@@ -107,24 +111,29 @@ def get_overall_data(request):
     query_list = []
 
     # No of Trainings
-    training_query = get_training_data_sql(**filter_args)
-    query_list.extend(training_query)
+    if filter_args['cardName'] in ['no_trainings']:
+        training_query = get_training_data_sql(**filter_args)
+        query_list.extend(training_query)
 
     # No of Mediators
-    mediator_query = get_mediators_data_sql(**filter_args)
-    query_list.extend(mediator_query)
+    if filter_args['cardName'] in ['no_mediators']:
+        mediator_query = get_mediators_data_sql(**filter_args)
+        query_list.extend(mediator_query)
 
     # Pass Percentage
-    pass_percent_query = get_pass_perc_data_sql(**filter_args)
-    query_list.extend(pass_percent_query)
+    if filter_args['cardName'] in ['pass_perc']:
+        pass_percent_query = get_pass_perc_data_sql(**filter_args)
+        query_list.extend(pass_percent_query)
 
     # Avg Score
-    avg_score_query = get_avg_score_data_sql(**filter_args)
-    query_list.extend(avg_score_query)
+    if filter_args['cardName'] in ['avg_score']:
+        avg_score_query = get_avg_score_data_sql(**filter_args)
+        query_list.extend(avg_score_query)
 
     # Farmers Reached
-    farmers_reached_query = get_farmers_reached_Sql(**filter_args)
-    query_list.extend(farmers_reached_query)
+    if filter_args['cardName'] in ['farmers_reached']:
+        farmers_reached_query = get_farmers_reached_Sql(**filter_args)
+        query_list.extend(farmers_reached_query)
 
     results = multiprocessing_list(query_list = query_list)
     data = json.dumps({'data' : results})
@@ -252,7 +261,6 @@ def farmers_reached_data(chart_name, result):
     data_list = {}
     temp_dict_outer = {'data':[]}
     for index, row in result.iterrows():
-        print row['Count'], row['Gender']
         temp_dict_outer['data'].append({'name':row['Gender'], 'y':row['Count']})
     outer_data['outerData']['series'].append(temp_dict_outer)
     data_list[chart_name] = outer_data
@@ -284,7 +292,6 @@ def graph_data(request):
         sql_query = farmers_reached_graph_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
         data_to_send = farmers_reached_data(filter_args['chart_name'], result)
-        print data_to_send
 
     return HttpResponse(json.dumps(data_to_send))
 

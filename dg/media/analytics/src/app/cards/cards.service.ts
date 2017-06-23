@@ -16,7 +16,6 @@ export class CardsService {
     for (let key in args.params) {
       params.set(key.toString(), args.params[key]);
     }
-
     let requestOptions: RequestOptions = new RequestOptions();
     requestOptions.search = params;
     return this.http.get(args.webUrl, requestOptions)
