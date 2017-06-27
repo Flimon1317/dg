@@ -1,15 +1,16 @@
-import { Component,OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CardsService } from './cards.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.training';
 
 @Component({
-    selector: 'app-cards',
-    templateUrl: './cards.component.html',
-    styleUrls: ['./cards.component.css']
+  selector: 'app-cards',
+  templateUrl: './cards.component.html',
+  styleUrls: ['./cards.component.css']
 })
 
 export class CardsComponent implements OnInit {
+
     cardsOverall = [];
     cardsRecent = [];
     
@@ -69,4 +70,3 @@ export class CardsComponent implements OnInit {
         });
     }
 }
-
