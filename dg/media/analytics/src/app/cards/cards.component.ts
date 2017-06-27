@@ -25,13 +25,15 @@ export class CardsComponent implements OnInit {
             if(this.cardsConfigs[key].overall.show){
                 this.cardsOverall.push({
                     'id': key,
-                    'text':this.cardsConfigs[key].text
+                    'text':this.cardsConfigs[key].text,
+                    'value':'...'
                 });
             }
             if(this.cardsConfigs[key].recent.show){
                 this.cardsRecent.push({
                     'id':key,
-                    'text':this.cardsConfigs[key].text
+                    'text':this.cardsConfigs[key].text,
+                    'value':'...'
                 });
             }
         })
