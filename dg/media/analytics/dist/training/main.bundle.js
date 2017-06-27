@@ -1030,13 +1030,15 @@ var CardsComponent = (function () {
             if (_this.cardsConfigs[key].overall.show) {
                 _this.cardsOverall.push({
                     'id': key,
-                    'text': _this.cardsConfigs[key].text
+                    'text': _this.cardsConfigs[key].text,
+                    'value': '...'
                 });
             }
             if (_this.cardsConfigs[key].recent.show) {
                 _this.cardsRecent.push({
                     'id': key,
-                    'text': _this.cardsConfigs[key].text
+                    'text': _this.cardsConfigs[key].text,
+                    'value': '...'
                 });
             }
         });
