@@ -272,7 +272,7 @@ var RenderType_CardsComponent = __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵc
     styles: styles_CardsComponent, data: {} });
 function View_CardsComponent_1(_l) {
     return __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵvid"](0, [(_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 15, 'div', [['class',
-                'col-md-3']], null, null, null, null, null)),
+                'col-md-2']], null, null, null, null, null)),
         (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n      '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 12, 'div', [['class', 'card'], ['style', 'background-color: #009688']], null, null, null, null, null)),
         (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n        '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, [['cardTitle',
                 1]], null, 9, 'div', [['class', 'card-block']], [[8, 'id', 0]], null, null, null, null)), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n          '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 1, 'h6', [['class', 'card-title text-white']], null, null, null, null, null)), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['', ''])), (_l()(),
@@ -289,7 +289,7 @@ function View_CardsComponent_1(_l) {
 }
 function View_CardsComponent_2(_l) {
     return __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵvid"](0, [(_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 15, 'div', [['class',
-                'col-md-3']], null, null, null, null, null)),
+                'col-md-2']], null, null, null, null, null)),
         (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n      '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 12, 'div', [['class', 'card '], ['style', 'background-color: #009688']], null, null, null, null, null)),
         (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n        '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, [['cardTitle',
                 1]], null, 9, 'div', [['class', 'card-block']], [[8, 'id', 0]], null, null, null, null)), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['\n          '])), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵeld"](0, null, null, 1, 'h6', [['class', 'card-title text-white']], null, null, null, null, null)), (_l()(), __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵted"](null, ['', ''])), (_l()(),
@@ -332,7 +332,7 @@ function View_CardsComponent_Host_0(_l) {
     }, null);
 }
 var CardsComponentNgFactory = __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵccf"]('app-cards', __WEBPACK_IMPORTED_MODULE_3__app_cards_cards_component__["a" /* CardsComponent */], View_CardsComponent_Host_0, {}, {}, []);
-//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUvYWJoaXNoZWsvRG9jdW1lbnRzL2RnL2RnL21lZGlhL2FuYWx5dGljcy9zcmMvYXBwL2NhcmRzL2NhcmRzLmNvbXBvbmVudC5uZ2ZhY3RvcnkudHMiLCJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJuZzovLy9ob21lL2FiaGlzaGVrL0RvY3VtZW50cy9kZy9kZy9tZWRpYS9hbmFseXRpY3Mvc3JjL2FwcC9jYXJkcy9jYXJkcy5jb21wb25lbnQudHMiLCJuZzovLy9ob21lL2FiaGlzaGVrL0RvY3VtZW50cy9kZy9kZy9tZWRpYS9hbmFseXRpY3Mvc3JjL2FwcC9jYXJkcy9jYXJkcy5jb21wb25lbnQuaHRtbCIsIm5nOi8vL2hvbWUvYWJoaXNoZWsvRG9jdW1lbnRzL2RnL2RnL21lZGlhL2FuYWx5dGljcy9zcmMvYXBwL2NhcmRzL2NhcmRzLmNvbXBvbmVudC50cy5DYXJkc0NvbXBvbmVudF9Ib3N0Lmh0bWwiXSwic291cmNlc0NvbnRlbnQiOlsiICIsIjxkaXYgY2xhc3M9XCJjb250YWluZXItZmx1aWRcIj5cbiAgPGg1IGNsYXNzPVwidGV4dC1tdXRlZFwiPk92ZXJhbGw8L2g1PlxuICA8aHIvPlxuICA8ZGl2IGNsYXNzPVwicm93XCI+XG4gICAgPGRpdiBjbGFzcz1cImNvbC1tZC0zXCIgKm5nRm9yPVwibGV0IGNhcmQgb2YgY2FyZHNPdmVyYWxsXCI+XG4gICAgICA8ZGl2IGNsYXNzPVwiY2FyZFwiIHN0eWxlPVwiYmFja2dyb3VuZC1jb2xvcjogIzAwOTY4OFwiPlxuICAgICAgICA8ZGl2ICNjYXJkVGl0bGUgaWQ9e3tjYXJkLmlkfX0gY2xhc3M9XCJjYXJkLWJsb2NrXCI+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10aXRsZSB0ZXh0LXdoaXRlXCI+e3tjYXJkLnRleHR9fTwvaDY+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10ZXh0IHRleHQtd2hpdGUgc21hbGxcIj48ZW0+PHN0cm9uZz57e2NhcmQudmFsdWV9fTwvc3Ryb25nPjwvZW0+PC9oNj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgPC9kaXY+XG48L2Rpdj5cbjxicj5cbjxicj5cbjxkaXYgY2xhc3M9XCJjb250YWluZXItZmx1aWRcIj5cbiAgPGg1IGNsYXNzPVwidGV4dC1tdXRlZFwiPlJlY2VudDwvaDU+XG4gIDxoci8+XG4gIDxkaXYgY2xhc3M9XCJyb3dcIj5cbiAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTNcIiAqbmdGb3I9XCJsZXQgY2FyZCBvZiBjYXJkc1JlY2VudFwiPlxuICAgICAgPGRpdiBjbGFzcz1cImNhcmQgXCIgc3R5bGU9XCJiYWNrZ3JvdW5kLWNvbG9yOiAjMDA5Njg4XCIgPlxuICAgICAgICA8ZGl2ICNjYXJkVGl0bGUgaWQ9e3tjYXJkLmlkfX0gY2xhc3M9XCJjYXJkLWJsb2NrXCI+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10aXRsZSB0ZXh0LXdoaXRlXCI+e3tjYXJkLnRleHR9fTwvaDY+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10ZXh0IHRleHQtd2hpdGUgc21hbGxcIj48ZW0+PHN0cm9uZz57e2NhcmQudmFsdWV9fTwvc3Ryb25nPjwvZW0+PC9oNj5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICA8L2Rpdj5cbjwvZGl2PiIsIjxhcHAtY2FyZHM+PC9hcHAtY2FyZHM+Il0sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7O29CQ0lJO01BQUE7TUFBd0QsNkNBQ3REO1VBQUE7VUFBQTtNQUFvRCwrQ0FDbEQ7VUFBQTtVQUFBLDRDQUFrRDtVQUFBLG1CQUNoRDtVQUFBO1VBQUEsOEJBQWtDLHdDQUFrQjtpQkFBQSxrQ0FDcEQ7VUFBQTtVQUFBLDBEQUF1QztVQUFBO1VBQUEsNENBQUk7VUFBQTtVQUFBLDhCQUFRLHdDQUFpQztpQkFBQSxnQ0FDaEY7TUFDRjtJQUpZO0lBQWhCLFdBQWdCLFNBQWhCO0lBQ29DO0lBQUE7SUFDaUI7SUFBQTs7OztvQkFZekQ7TUFBQTtNQUF1RCw2Q0FDckQ7VUFBQTtVQUFBO01BQXNELCtDQUNwRDtVQUFBO1VBQUEsNENBQWtEO1VBQUEsbUJBQ2hEO1VBQUE7VUFBQSw4QkFBa0Msd0NBQWtCO2lCQUFBLGtDQUNwRDtVQUFBO1VBQUEsMERBQXVDO1VBQUE7VUFBQSw0Q0FBSTtVQUFBO1VBQUEsOEJBQVEsd0NBQWlDO2lCQUFBLDhCQUNsRjtNQUNGO0lBSmM7SUFBaEIsV0FBZ0IsU0FBaEI7SUFDb0M7SUFBQTtJQUNpQjtJQUFBOzs7O29CQXhCN0Q7TUFBQTtNQUFBLGdCQUE2Qix5Q0FDM0I7TUFBQTtNQUFBLDhCQUF1Qiw0Q0FBWTthQUFBLDBCQUNuQztNQUFBO01BQUEsZ0JBQUsseUNBQ0w7TUFBQTtNQUFBLDhCQUFpQiwyQ0FDZjthQUFBO2FBQUE7NEJBQUEseUNBT007VUFBQSxXQUNGLHVDQUNGO1VBQUEsU0FDTjtVQUFBO01BQUksdUNBQ0o7VUFBQTtVQUFBLGdCQUFJLHVDQUNKO1VBQUE7VUFBQSwwREFBNkI7VUFBQSxXQUMzQjtVQUFBO01BQXVCLDJDQUFXO01BQ2xDO1VBQUEsMERBQUs7VUFBQSxXQUNMO1VBQUE7TUFBaUIsMkNBQ2Y7VUFBQSw2REFBQTtVQUFBO2NBQUEsMkJBT0k7OztJQXZCa0I7SUFBdEIsWUFBc0IsU0FBdEI7SUFnQnNCO0lBQXRCLFlBQXNCLFNBQXRCOzs7O29CQ3BCSjtNQUFBO2FBQUE7VUFBQTtJQUFBOzs7OyJ9
+//# sourceMappingURL=data:application/json;base64,eyJmaWxlIjoiL2hvbWUvYWJoaXNoZWsvRG9jdW1lbnRzL2RnL2RnL21lZGlhL2FuYWx5dGljcy9zcmMvYXBwL2NhcmRzL2NhcmRzLmNvbXBvbmVudC5uZ2ZhY3RvcnkudHMiLCJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJuZzovLy9ob21lL2FiaGlzaGVrL0RvY3VtZW50cy9kZy9kZy9tZWRpYS9hbmFseXRpY3Mvc3JjL2FwcC9jYXJkcy9jYXJkcy5jb21wb25lbnQudHMiLCJuZzovLy9ob21lL2FiaGlzaGVrL0RvY3VtZW50cy9kZy9kZy9tZWRpYS9hbmFseXRpY3Mvc3JjL2FwcC9jYXJkcy9jYXJkcy5jb21wb25lbnQuaHRtbCIsIm5nOi8vL2hvbWUvYWJoaXNoZWsvRG9jdW1lbnRzL2RnL2RnL21lZGlhL2FuYWx5dGljcy9zcmMvYXBwL2NhcmRzL2NhcmRzLmNvbXBvbmVudC50cy5DYXJkc0NvbXBvbmVudF9Ib3N0Lmh0bWwiXSwic291cmNlc0NvbnRlbnQiOlsiICIsIjxkaXYgY2xhc3M9XCJjb250YWluZXItZmx1aWRcIj5cbiAgPGg1IGNsYXNzPVwidGV4dC1tdXRlZFwiPk92ZXJhbGw8L2g1PlxuICA8aHIvPlxuICA8ZGl2IGNsYXNzPVwicm93XCI+XG4gICAgPGRpdiBjbGFzcz1cImNvbC1tZC0yXCIgKm5nRm9yPVwibGV0IGNhcmQgb2YgY2FyZHNPdmVyYWxsXCI+XG4gICAgICA8ZGl2IGNsYXNzPVwiY2FyZFwiIHN0eWxlPVwiYmFja2dyb3VuZC1jb2xvcjogIzAwOTY4OFwiPlxuICAgICAgICA8ZGl2ICNjYXJkVGl0bGUgaWQ9e3tjYXJkLmlkfX0gY2xhc3M9XCJjYXJkLWJsb2NrXCI+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10aXRsZSB0ZXh0LXdoaXRlXCI+e3tjYXJkLnRleHR9fTwvaDY+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10ZXh0IHRleHQtd2hpdGUgc21hbGxcIj48ZW0+PHN0cm9uZz57e2NhcmQudmFsdWV9fTwvc3Ryb25nPjwvZW0+PC9oNj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgPC9kaXY+XG48L2Rpdj5cbjxicj5cbjxicj5cbjxkaXYgY2xhc3M9XCJjb250YWluZXItZmx1aWRcIj5cbiAgPGg1IGNsYXNzPVwidGV4dC1tdXRlZFwiPlJlY2VudDwvaDU+XG4gIDxoci8+XG4gIDxkaXYgY2xhc3M9XCJyb3dcIj5cbiAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTJcIiAqbmdGb3I9XCJsZXQgY2FyZCBvZiBjYXJkc1JlY2VudFwiPlxuICAgICAgPGRpdiBjbGFzcz1cImNhcmQgXCIgc3R5bGU9XCJiYWNrZ3JvdW5kLWNvbG9yOiAjMDA5Njg4XCIgPlxuICAgICAgICA8ZGl2ICNjYXJkVGl0bGUgaWQ9e3tjYXJkLmlkfX0gY2xhc3M9XCJjYXJkLWJsb2NrXCI+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10aXRsZSB0ZXh0LXdoaXRlXCI+e3tjYXJkLnRleHR9fTwvaDY+XG4gICAgICAgICAgPGg2IGNsYXNzPVwiY2FyZC10ZXh0IHRleHQtd2hpdGUgc21hbGxcIj48ZW0+PHN0cm9uZz57e2NhcmQudmFsdWV9fTwvc3Ryb25nPjwvZW0+PC9oNj5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICA8L2Rpdj5cbjwvZGl2PiIsIjxhcHAtY2FyZHM+PC9hcHAtY2FyZHM+Il0sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7O29CQ0lJO01BQUE7TUFBd0QsNkNBQ3REO1VBQUE7VUFBQTtNQUFvRCwrQ0FDbEQ7VUFBQTtVQUFBLDRDQUFrRDtVQUFBLG1CQUNoRDtVQUFBO1VBQUEsOEJBQWtDLHdDQUFrQjtpQkFBQSxrQ0FDcEQ7VUFBQTtVQUFBLDBEQUF1QztVQUFBO1VBQUEsNENBQUk7VUFBQTtVQUFBLDhCQUFRLHdDQUFpQztpQkFBQSxnQ0FDaEY7TUFDRjtJQUpZO0lBQWhCLFdBQWdCLFNBQWhCO0lBQ29DO0lBQUE7SUFDaUI7SUFBQTs7OztvQkFZekQ7TUFBQTtNQUF1RCw2Q0FDckQ7VUFBQTtVQUFBO01BQXNELCtDQUNwRDtVQUFBO1VBQUEsNENBQWtEO1VBQUEsbUJBQ2hEO1VBQUE7VUFBQSw4QkFBa0Msd0NBQWtCO2lCQUFBLGtDQUNwRDtVQUFBO1VBQUEsMERBQXVDO1VBQUE7VUFBQSw0Q0FBSTtVQUFBO1VBQUEsOEJBQVEsd0NBQWlDO2lCQUFBLDhCQUNsRjtNQUNGO0lBSmM7SUFBaEIsV0FBZ0IsU0FBaEI7SUFDb0M7SUFBQTtJQUNpQjtJQUFBOzs7O29CQXhCN0Q7TUFBQTtNQUFBLGdCQUE2Qix5Q0FDM0I7TUFBQTtNQUFBLDhCQUF1Qiw0Q0FBWTthQUFBLDBCQUNuQztNQUFBO01BQUEsZ0JBQUsseUNBQ0w7TUFBQTtNQUFBLDhCQUFpQiwyQ0FDZjthQUFBO2FBQUE7NEJBQUEseUNBT007VUFBQSxXQUNGLHVDQUNGO1VBQUEsU0FDTjtVQUFBO01BQUksdUNBQ0o7VUFBQTtVQUFBLGdCQUFJLHVDQUNKO1VBQUE7VUFBQSwwREFBNkI7VUFBQSxXQUMzQjtVQUFBO01BQXVCLDJDQUFXO01BQ2xDO1VBQUEsMERBQUs7VUFBQSxXQUNMO1VBQUE7TUFBaUIsMkNBQ2Y7VUFBQSw2REFBQTtVQUFBO2NBQUEsMkJBT0k7OztJQXZCa0I7SUFBdEIsWUFBc0IsU0FBdEI7SUFnQnNCO0lBQXRCLFlBQXNCLFNBQXRCOzs7O29CQ3BCSjtNQUFBO2FBQUE7VUFBQTtJQUFBOzs7OyJ9
 //# sourceMappingURL=cards.component.ngfactory.js.map
 
 /***/ }),
@@ -1044,29 +1044,33 @@ var CardsComponent = (function () {
             webUrl: __WEBPACK_IMPORTED_MODULE_2__environments_environment_training__["a" /* environment */].url + "getData",
             params: {
                 apply_filter: false,
+                'cardName': '',
             }
         };
         this.getData(options);
     };
     CardsComponent.prototype.getData = function (options) {
         var _this = this;
-        this.cardsService.getApiData(options)
-            .subscribe(function (dataList) {
-            dataList['data'].forEach(function (cardData) {
-                if (cardData.placeHolder == "overall") {
-                    _this.cardsOverall.forEach(function (card) {
-                        if (cardData.tagName === card.text) {
-                            card['value'] = cardData.value;
-                        }
-                    });
-                }
-                else {
-                    _this.cardsRecent.forEach(function (card) {
-                        if (cardData.tagName === card.text) {
-                            card['value'] = cardData.value;
-                        }
-                    });
-                }
+        Object.keys(this.cardsConfigs).forEach(function (key) {
+            options.params.cardName = key;
+            _this.cardsService.getApiData(options)
+                .subscribe(function (dataList) {
+                dataList['data'].forEach(function (cardData) {
+                    if (cardData.placeHolder == "overall") {
+                        _this.cardsOverall.forEach(function (card) {
+                            if (card.text == cardData.tagName) {
+                                card['value'] = cardData.value;
+                            }
+                        });
+                    }
+                    if (cardData.placeHolder == "recent") {
+                        _this.cardsRecent.forEach(function (card) {
+                            if (card.text == cardData.tagName) {
+                                card['value'] = cardData.value;
+                            }
+                        });
+                    }
+                });
             });
         });
     };
@@ -1746,7 +1750,7 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["a
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return cardConfig; });
 var cardConfig = {
     'no_trainings': {
-        text: 'Number of Trainings',
+        text: 'No. of Trainings',
         overall: {
             filter: false,
             show: true,
@@ -1758,7 +1762,7 @@ var cardConfig = {
         },
     },
     'no_mediators': {
-        text: 'Number of Mediators',
+        text: 'No. of Mediators',
         overall: {
             filter: false,
             show: true,
@@ -1769,7 +1773,7 @@ var cardConfig = {
             show: true,
         },
     },
-    'pass_%': {
+    'pass_perc': {
         text: 'Pass Percentage',
         overall: {
             filter: false,
@@ -1783,6 +1787,18 @@ var cardConfig = {
     },
     'avg_score': {
         text: 'Average Score',
+        overall: {
+            filter: false,
+            show: true,
+        },
+        recent: {
+            dateRange: 60,
+            filter: true,
+            show: true,
+        },
+    },
+    'farmers_reached': {
+        text: 'Farmers reached',
         overall: {
             filter: false,
             show: true,
@@ -2017,6 +2033,40 @@ var chartsConfig = {
             drillUpText: '<< Back'
         },
     },
+    'Farmers_reached': {
+        chart: {
+            type: 'pie',
+            renderTo: 'graph_5',
+            tab: {
+                'id': 'tab4',
+                'class': 'col-sm-12'
+            },
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+        },
+        credits: { enabled: false },
+        title: { text: 'Farmers Reached' },
+        xAxis: { type: 'category' },
+        legend: { enabled: false },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: 'black'
+                    }
+                }
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        series: [],
+    },
 };
 //# sourceMappingURL=GraphsConfig.js.map
 
@@ -2038,6 +2088,10 @@ var tabsConfig = {
     },
     'tab3': {
         'heading': 'Time Period',
+        'showDivs': []
+    },
+    'tab4': {
+        'heading': 'Farmers Reached',
         'showDivs': []
     }
 };
