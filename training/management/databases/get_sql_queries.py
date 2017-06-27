@@ -361,5 +361,4 @@ def farmers_reached_graph_query(**Kwargs):
             sql_ds['where'].append('pma.state_id in (' + ",".join(states_list) + ')')
 
     sql_q = join_sql_ds(sql_ds)
-    print sql_q
     return sql_q
