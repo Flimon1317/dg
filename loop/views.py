@@ -78,10 +78,8 @@ def login(request):
                  'phone_start':loop_user[0].village.block.district.state.phone_start,
                  'preferred_language':loop_user[0].preferred_language.notation,
                  'country':loop_user[0].village.block.district.state.country.country_name}))
-
-
         else:
-            return HttpResponse("0", status=401)
+            return HttpResponse(json.dumps({'message':'Username/Password provided are incorrect'}), status=401)
     else:
         return HttpResponse("0", status=403)
     return HttpResponse("0", status=400)

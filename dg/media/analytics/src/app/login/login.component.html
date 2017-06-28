@@ -28,8 +28,9 @@
             <!-- <label for="password">Password:</label> -->
             <input type="password" class="form-control" id="passsword" placeholder="Password" [(ngModel)]="userDetail.password" name="password">
           </div>
+          <h6 *ngIf="invalidCredentials" class="alert alert-danger">{{ errorMessage }}</h6>
           <!-- <div class="btn-group" role="group"> -->
-          <button type="button" id="login" class="btn btn-primary" role="button" (click)="initiate_login()">Login</button>
+          <button type="button" id="login" class="btn btn-primary btn-block" role="button" (click)="initiate_login($event)">Login</button>
           <!-- </div> -->
         </form>
       </div>

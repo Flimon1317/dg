@@ -11,6 +11,8 @@ export class LoginComponent implements OnInit {
   @ViewChild('childModal') public childModal: ModalDirective;
   userDetail = { username: "", password: "" }
   username: string = "";
+  invalidCredentials: boolean = false;
+  errorMessage: string = "";
   constructor(private loginService: LoginService) { }
 
   ngOnInit() {
@@ -25,7 +27,9 @@ export class LoginComponent implements OnInit {
     this.childModal.hide();
   }
 
-  initiate_login(): void {
+  initiate_login(event): void {
+    event.target.innerHTML = "Please Wait...";
+    event.target.disabled = true;
     this.loginService.login(this.userDetail).subscribe(val => {
       localStorage.setItem('ApiKey', JSON.stringify(val.key));
       localStorage.setItem('UserName', JSON.stringify(val.user_name));
@@ -33,7 +37,13 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('PhoneNumber', JSON.stringify(val.phone_number));
       this.hideChildModal();
       this.username = JSON.stringify(val.full_name);
-    });
+    },
+      err => {
+        event.target.innerHTML = "Login";
+        event.target.disabled = false;
+        this.invalidCredentials = true;
+        this.errorMessage = err;
+      });
   }
 
   logout(): void {
