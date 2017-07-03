@@ -1,7 +1,7 @@
 <div class="col-sm-2 login-button" *ngIf="username?.length > 0">
   <div class="btn-group" dropdown>
-    <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">{{username | slice:1:username?.length-1}}<span class="caret"></span>
-    </button>
+    <a dropdownToggle class="btn dropdown-toggle">{{username | slice:1:username?.length-1}}<span class="caret"></span>
+    </a>
     <ul *dropdownMenu class="dropdown-menu" role="menu">
       <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
     </ul>
