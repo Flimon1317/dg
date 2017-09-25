@@ -6,6 +6,7 @@ div.tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+
 }
 
 /* Style the buttons inside the tab */
@@ -137,16 +138,7 @@ div.tab button.active {
 										<li>Data to be uploaded from the file should be from a single block</li><br>
 		        						<li>File should be in .csv/.xls/.xlsx form</li><br>  
 		        						<li>Each excel file should contain only a single sheet of data</li><br> 
-		        						<li>All fields mentioned in bold in sample sheet are necessary</li><br>                            
-		        						<!--<li>File should have the following fields
-											<table class="tableizer-table">
-												<tr class="tableizer-firstrow"><th>Village_Name</th><th>Shg_Name</th><th>Member_Name</th><th>Member_Surname</th><th>Husband_Father_Name</th><th>Husband_Father_Surname</th>
-													<th>Gender(M/F)</th></tr>
-												<tr class="tableizer-secondrow"><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-												<tr class="tableizer-thirdrow"><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-												<tr class="tableizer-fourthrow"><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-											</table>
-										</li> -->
+		        						<li>All fields mentioned in bold in sample sheet are necessary</li><br>
 									</ul>
 		        					<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
 										<a href="/media/data_upload/Sample_Geographical_Add.xlsx">download sample Geographical excel sheet </a>
@@ -156,9 +148,9 @@ div.tab button.active {
 										<center class="copy">
 											<form action="/coco/dataupload/upload/" method="POST" enctype="multipart/form-data" >
 												{% csrf_token %}
-<!-- 												<div name="blocks">
-													Block :
-													<select name="get_block">
+												<div name="states">
+													State :
+													<select name="get_state">
 														<option disabled selected> -- select an option -- </option>
 														{% if states %}
 															{% for state in states %}
@@ -166,7 +158,7 @@ div.tab button.active {
 															{% endfor %}
 														{% endif %}
 													</select>
-												</div> <br> -->
+												</div> <br>
 												<div id="get_email" >
                                       				<p> Email id : <input id="email_id" name="email_id" type="text"> </p>
                        								(Enter your email id to receive status of uploaded file via email) 
