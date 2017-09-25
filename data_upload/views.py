@@ -37,10 +37,15 @@ def home(request):
     blocks = CocoUser.objects.filter(user__id=user_id). \
              values_list('villages__block__block_name').distinct()
     block_names = [b for b in zip(*blocks)[0]]
+    # states = CocoUser.objects.filter(user__id=user_id). \
+    #             values_list('states').distinct()
+    # state_names = [s for s in zip(*states)[0]]
     return render_to_response(
            'data_upload/netupload.html',
            {'form': form,
-            'blocks': block_names},
+            'blocks': block_names,
+            # 'states': state_names
+            },
             context_instance=RequestContext(request)
            )
 
