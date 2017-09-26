@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"sta",
+				"state_id\tstatement"
+			],
+			[
+				"block",
+				"block_id"
+			],
+			[
+				"state",
+				"state_names"
+			],
+			[
+				"user",
+				"user_id"
+			],
+			[
+				"use",
+				"user_id"
+			],
+			[
 				"di",
 				"district_name\tstatement"
 			],
@@ -120,18 +140,30 @@
 	"buffers":
 	[
 		{
-			"file": "data_upload/urls.py",
+			"contents": "import os.path\nimport StringIO\nimport zipfile\nimport xlrd\nimport unicodecsv as csv\n\nfrom django import forms\n\nfrom django.views.decorators.csrf import csrf_protect\nfrom django.shortcuts import render_to_response\nfrom django.core.mail import EmailMultiAlternatives\n\nfrom django.template import RequestContext\nfrom django.http import  HttpResponse\n\nfrom django.contrib.auth.decorators import login_required, user_passes_test\nfrom django.contrib.auth.models import User\n\nimport dg.settings\nfrom dg.settings import PERMISSION_DENIED_URL\n\nimport person\nfrom data_upload.models import Document\nfrom data_upload.forms import DocumentForm\nfrom geographies.models import  Block, State\nfrom coco.models import CocoUser\n\n\n@login_required()\n@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0,\n                  login_url=PERMISSION_DENIED_URL)\n@csrf_protect\ndef home(request):\n    \"\"\"Home Page of static data upload\"\"\"\n    form = DocumentForm(request.POST, request.FILES)\n    user_id = User.objects.get(username=request.user.username).id\n    blocks = CocoUser.objects.filter(user__id=user_id). \\\n             values_list('villages__block__block_name').distinct()\n    block_names = [b for b in zip(*blocks)[0]]\n\n    states = CocoUser.objects.filter(user__id=user_id). \\\n                values_list('villages__block__district__state__state_name').distinct()\n    state_names = [s for s in zip(*states)[0]]\n\n    return render_to_response(\n           'data_upload/netupload.html',\n           {'form': form,\n            'blocks': block_names,\n            'states': state_names\n            },\n            context_instance=RequestContext(request)\n           )\n\n\n# Handle file upload\ndef file_upload(request):\n    if 'personal_form' in request.POST:\n        \"\"\"\n        Upload data in the file to database.\n        File formats: {.xls, .xlsx., .csv}\n        \"\"\" \n        ext_allwd = ['.xls', '.xlsx']\n        \n        del person.ERROR_FILENAMES[:] #empty the list of files\n        del person.SUCCESS_FILENAMES[:]\n        \n        user_id = User.objects.get(username=request.user.username).id\n        block_id = Block.objects.get(block_name=request.POST.get(\"get_block\")).id\n        \n        form = DocumentForm(request.POST, request.FILES)\n        \n        if not form.is_valid():\n            raise forms.ValidationError(\"Invalid form\")        \n\n        document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)\n         \n        file_ext = os.path.splitext(document_raw.docfile.name)[-1]  \n        \n        error_list = []\n        \n        if (file_ext in ext_allwd):\n            try:\n                document_raw.save()\n                document = file_converter(document_raw)\n            except Exception, err:\n                error_list.append(err)\n        \n        elif (file_ext == '.csv'):\n            try:\n                document_raw.save()\n                document = document_raw.docfile.name\n            except Exception, err:\n                error_list.append(err)\n        else:\n            error_list.append('Invalid file format!!')    \n        \n        if len(error_list) > 0:\n            return render_to_response(\"data_upload/ValidationErrorDisplay.html\",\n                                      {'valid_errors': error_list },\n                                      context_instance=RequestContext(request))\n       \n        upload_success = person.upload_personal_data(document, user_id, block_id)\n        \n        if not upload_success:\n            valid_errors = [\"Some field missing or mismatch. Please \" + \\\n                  \"read instructions or download sample file\"]\n            return render_to_response(\"data_upload/ValidationErrorDisplay.html\",\n                                      {'valid_errors' : valid_errors },\n                                      context_instance=RequestContext(request))\n        \n        send_mail(request)\n        \n        if(person.ERROR > 0):\n            csv_data = csv_read()\n            return render_to_response(\"data_upload/errorPersonal.html\", \n                                      {'csv_data' : csv_data},\n                                      context_instance=RequestContext(request))\n        else:\n            return render_to_response(\"data_upload/successPersonal.html\",\n                                      context_instance=RequestContext(request))\n        \n\n    else:\n        \"\"\"\n        Upload data in the file to database.\n        File formats: {.xls, .xlsx., .csv}\n        \"\"\" \n        ext_allwd = ['.xls', '.xlsx']\n        \n        del person.ERROR_FILENAMES[:] #empty the list of files\n        del person.SUCCESS_FILENAMES[:]\n        \n        user_id = User.objects.get(username=request.user.username).id\n        state_id = State.objects.get(state_name=request.POST.get(\"get_state\")).id\n        \n        form = DocumentForm(request.POST, request.FILES)\n        \n        if not form.is_valid():\n            raise forms.ValidationError(\"Invalid form\")        \n\n        document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)\n         \n        file_ext = os.path.splitext(document_raw.docfile.name)[-1]  \n        \n        error_list = []\n    \n        if (file_ext in ext_allwd):\n            try:\n                document_raw.save()\n                document = file_converter(document_raw)\n            except Exception, err:\n                error_list.append(err)\n        \n        elif (file_ext == '.csv'):\n            try:\n                document_raw.save()\n                document = document_raw.docfile.name\n            except Exception, err:\n                error_list.append(err)\n        else:\n            error_list.append('Invalid file format!!')    \n        \n        if len(error_list) > 0:\n                return render_to_response(\"data_upload/ValidationErrorDisplay.html\",\n                                      {'valid_errors': error_list },\n                                      context_instance=RequestContext(request))\n       \n        upload_success = person.upload_geographical_data(document, user_id, state_id)\n        \n        if not upload_success:\n            valid_errors = [\"Some field missing or mismatch. Please \" + \\\n                  \"read instructions or download sample file\"]\n            return render_to_response(\"data_upload/ValidationErrorDisplay.html\",\n                                      {'valid_errors' : valid_errors },\n                                      context_instance=RequestContext(request))\n        \n        send_mail(request)\n        \n        if(person.ERROR > 0):\n            csv_data = csv_read()\n            return render_to_response(\"data_upload/errorGeographical.html\", \n                                      {'csv_data' : csv_data},\n                                      context_instance=RequestContext(request))\n        else:\n            return render_to_response(\"data_upload/successGeographical.html\",\n                                      context_instance=RequestContext(request))\n\n            \ndef file_converter(document):\n    # converts file in .xls/.xlsx to .csv\n    document_docfile_name = os.path.join(dg.settings.MEDIA_ROOT,\n                                         document.docfile.name)\n    wb = xlrd.open_workbook(document_docfile_name)\n    worksheets = wb.sheet_names()\n    \n    # first sheet only\n    sh = wb.sheet_by_name(worksheets[0])\n    \n    converted_csv_file = open(os.path.splitext(document_docfile_name)[0]+ \\\n                             '.csv', 'wb')\n    wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_ALL)\n    #quote to none if char escape error pops up\n    \n    for rownum in xrange(sh.nrows):\n        temp_list = [unicode(x).replace(u'\\xa0', u'') for x in sh.row_values(rownum)]\n        wr.writerow(temp_list)\n\n        \n    converted_csv_file.close()\n    os.remove(document_docfile_name) #delete the old document\n    \n    return os.path.splitext(document_docfile_name)[0] +'.csv'\n    \ndef handle_zip_download(request):\n    buffer= StringIO.StringIO()\n    zip_subdir = \"error_files\"\n    zip_filename = \"%s.zip\" % zip_subdir\n    \n    zip_file= zipfile.ZipFile(buffer, \"w\")\n    \n    for f in (person.SUCCESS_FILENAMES + person.ERROR_FILENAMES):\n        file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', f)\n        zip_path = os.path.join(str(zip_subdir), str(file)).split('/')[-1]\n        zip_file.write(file, zip_path) #Add files to zip        \n        \n    zip_file.close() \n     \n    resp = HttpResponse(buffer.getvalue(), \n                        content_type = \"application/x-zip-compressed\")\n    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename\n    return resp\n        \n\ndef csv_read():\n    #display successfully upload data in success.html file    \n    csv_data = []\n    for file in person.SUCCESS_FILENAMES:\n        file_data = []\n        \n        file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', file)        \n        \n        csv_reader = csv.reader(open(file))\n        csv_reader.next()\n        for row in csv_reader:\n            for column in row[1::2]:\n                file_data.append(column)\n        \n        csv_data.append(file_data)\n    \n    return csv_data  \n\n\ndef send_mail(request):\n    document = Document(docfile=request.FILES['docfile'])\n    subject = \"Status of uploaded file: \"+document.docfile.name\n    from_email = dg.settings.EMAIL_HOST_USER\n    to_email = [request.POST.get(\"email_id\")]\n    \n    if person.ERROR < 1:\n        body = \"All the data in uploaded file has been successfully entered\"\n        msg = EmailMultiAlternatives(subject, body, from_email, to_email)\n    else:\n        body = \"Some of the data in uploaded file could not be entered.\" + \\\n               \"Please find the attachment containing the error files \"\n\n        msg = EmailMultiAlternatives(subject, body, from_email, to_email)        \n        for file in (person.ERROR_FILENAMES + person.SUCCESS_FILENAMES):\n            file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', file)\n            msg.attach_file(file, 'text/csv' )            \n        msg.send()",
+			"file": "data_upload/views.py",
+			"file_size": 10020,
+			"file_write_time": 131508117606070740,
 			"settings":
 			{
-				"buffer_size": 291,
+				"buffer_size": 10019,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "data_upload/views.py",
+			"file": "data_upload/person.py",
 			"settings":
 			{
-				"buffer_size": 6833,
+				"buffer_size": 12254,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "dg/templates/data_upload/errorGeographical.html",
+			"settings":
+			{
+				"buffer_size": 1808,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -140,25 +172,29 @@
 			"file": "dg/templates/data_upload/netupload.html",
 			"settings":
 			{
-				"buffer_size": 3841,
+				"buffer_size": 7479,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "data_upload/forms.py",
+			"file": "dg/settings.py",
 			"settings":
 			{
-				"buffer_size": 112,
+				"buffer_size": 2725,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "data_upload/models.py",
+			"contents": "Package Control Messages\n========================\n\nDjango Manage Commands\n----------------------\n\n       ____  _                           __  __                                           \n      |  _ \\(_) __ _ _ __   __ _  ___   |  \\/  | __ _ _ __   __ _  __ _  ___              \n      | | | | |/ _` | '_ \\ / _` |/ _ \\  | |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\             \n      | |_| | | (_| | | | | (_| | (_) | | |  | | (_| | | | | (_| | (_| |  __/             \n      |____// |\\__,_|_| |_|\\__, |\\___/  |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|             \n          |__/             |___/                                  |___/                   \n        ____                                          _                                   \n       / ___|___  _ __ ___  _ __ ___   __ _ _ __   __| |___                               \n      | |   / _ \\| '_ ` _ \\| '_ ` _ \\ / _` | '_ \\ / _` / __|                              \n      | |__| (_) | | | | | | | | | | | (_| | | | | (_| \\__ \\                              \n       \\____\\___/|_| |_| |_|_| |_| |_|\\__,_|_| |_|\\__,_|___/                              \n                                                                                          \n  #########################################################################################\n  \n  \n  - Ctrl + Shift + A: opens a menu with all Django commands.\n  \n  - Remember to set the path to the directory where your virtual environments are installed in \"python_virtualenv_paths\" for the plugin to work correclty, as many directories as you need can be added.\n  \n  - Enjoy and please let us know if you run into any issue.\n  \n     :smile:\n\n\nEmmet\n-----\n\n  Thank you for installing Emmet -- a toolkit that can greatly improve your workflow. Note that this plugin automatically downloads and installs PyV8 binary (see status bar message). \n  \n  ******************************\n  Please restart editor \n  to finish installation process \n  after PyV8 was downloaded.\n  ******************************\n  \n  Tab key handler\n  ==========================\n  \n  By default, Emmet allows you to expand abbreviations with Tab key in HTML, XML, HAML and CSS/SASS/LESS/Stylus documents. As a side effect, you can’t use some of your ST2 snippets.\n  \n  Please read https://github.com/sergeche/emmet-sublime#tab-key-handler about how Tab handler works and how to tweak its behavior to match your needs.\n  \n  Enter key\n  ==========================\n  \n  In HTML and XML documents, Emmet overrides Enter key to insert formatted line breaks between opening and closing tags. In some cases it will break character input (for example, in Japanese language).\n  \n  To disable Enter key handler, simply add the following option in your user's Preferences file:\n  \n  \"disable_formatted_linebreak\": true\n  \n  Actions shortcuts\n  ==========================\n  \n  Emmet has a number of actions with keyboard shortcuts that may override ones you're using commonly (for example, Ctrl-E or Ctrl-Down). Please read the project main page to get list of available actions and keyboard shortcuts and how to disable them:\n  https://github.com/sergeche/emmet-sublime\n  \n  Documentation and examples:\n  http://emmet.io\n  \n  ------------------------------\n  Follow me on Twitter: @emmetio\n  ------------------------------\n",
 			"settings":
 			{
-				"buffer_size": 329,
-				"line_ending": "Unix"
+				"buffer_size": 3271,
+				"line_ending": "Unix",
+				"name": "Package Control Messages",
+				"read_only": true,
+				"scratch": true
 			}
 		}
 	],
@@ -169,21 +205,57 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 217.0,
-		"last_filter": "install",
+		"height": 354.0,
+		"last_filter": "instal",
 		"selected_items":
 		[
 			[
-				"install",
+				"instal",
 				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"Django:ru",
+				"Django: Run Server"
+			],
+			[
+				"p",
+				"Package Control: List Packages"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
 			],
 			[
 				"vi",
 				"View: Toggle Menu"
 			],
 			[
+				"Django:vi",
+				"Django: Set Virtual Environment"
+			],
+			[
+				"Django:r",
+				"Django: Run Server"
+			],
+			[
+				"Django:se",
+				"Django: Set Virtual Environment"
+			],
+			[
 				"",
 				"Anaconda: Disable linting on this file"
+			],
+			[
+				"vie",
+				"View: Toggle Menu"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
 			],
 			[
 				"view",
@@ -208,10 +280,6 @@
 			[
 				"install package",
 				"Package Control: Install Package"
-			],
-			[
-				"package",
-				"Package Control: Add Channel"
 			]
 		],
 		"width": 585.0
@@ -238,13 +306,29 @@
 		"/root/Desktop/Repositories/Github/dg/data_upload",
 		"/root/Desktop/Repositories/Github/dg/dg",
 		"/root/Desktop/Repositories/Github/dg/dg/templates",
-		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload"
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload",
+		"/root/Desktop/Repositories/Github/dg/geographies"
 	],
 	"file_history":
 	[
+		"/root/Desktop/Repositories/Github/dg/data_upload/urls.py",
+		"/root/Desktop/Repositories/Github/dg/data_upload/models.py",
+		"/root/Desktop/Repositories/Github/dg/data_upload/forms.py",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/social_website/internal-tools/header.html",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload/successPersonal.html",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload/errorPersonal.html",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload/successGeographical.html",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload/success.html",
+		"/root/Desktop/Repositories/Github/dg/dg/templates/data_upload/ValidationErrorDisplay.html",
+		"/root/Desktop/Repositories/Github/dg/loop/views.py",
+		"/root/Desktop/Repositories/Github/dg/loop/templates/loop_html_body.html",
+		"/root/Desktop/Repositories/Github/dg/coco/models.py",
+		"/root/Desktop/Repositories/Github/dg/dg/settings.py",
+		"/root/Desktop/Repositories/Github/dg/dg/base_settings.py",
+		"/root/Desktop/Repositories/Github/dg/dg/media/data_upload/Sample_Person_Add.xlsx",
+		"/root/.config/sublime-text-3/Packages/Python PEP8 Autoformat/pep8_autoformat.sublime-settings",
 		"/root/Desktop/Repositories/Github/dg/data_upload/person.py",
 		"/root/Desktop/Repositories/Github/dg/data_upload/views.py",
-		"/root/Desktop/Repositories/Github/dg/dg/settings.py",
 		"/root/Desktop/Repositories/dg/dg/settings.py",
 		"/root/Desktop/Repositories/dg-master/dg/Settings.py",
 		"/root/Desktop/Repositories/Github/Wagtail/mysite/mysite/settings/base.py",
@@ -289,6 +373,19 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"error.html",
+			"success.html",
+			"rows_villages",
+			"district_q",
+			"District",
+			"district_success_file",
+			"village_success_file",
+			"upload_data",
+			"state",
+			"State",
+			"Broadcast(",
+			"download sa",
+			"header.html",
 			"netupload.html"
 		],
 		"highlight": true,
@@ -307,28 +404,55 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "data_upload/urls.py",
+					"file": "data_upload/views.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 291,
+						"buffer_size": 10019,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								7047,
+								7047
 							]
 						],
 						"settings":
 						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
 							"bracket_highlighter.busy": false,
 							"bracket_highlighter.locations":
 							{
@@ -347,89 +471,91 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
-								"bh_single_quote_content"
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
 							"git_gutter_is_enabled": true,
 							"git_savvy.repo_path": "/root/Desktop/Repositories/Github/dg",
-							"syntax": "Packages/Python/Python.sublime-syntax"
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2881.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "data_upload/views.py",
+					"file": "data_upload/person.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6833,
+						"buffer_size": 12254,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3378,
-								3378
+								8526,
+								8534
 							]
 						],
 						"settings":
@@ -463,61 +589,61 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
-								"bh_single_quote_content"
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
 							"git_gutter_is_enabled": true,
@@ -527,27 +653,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1062.0,
+						"translation.y": 3391.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "dg/templates/data_upload/netupload.html",
+					"file": "dg/templates/data_upload/errorGeographical.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3841,
+						"buffer_size": 1808,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								42,
+								42
 							]
 						],
 						"settings":
@@ -585,61 +711,168 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
-								"bh_single_quote_content"
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
+							"git_gutter_is_enabled": true,
+							"git_savvy.repo_path": "/root/Desktop/Repositories/Github/dg",
+							"open_with_edit": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "dg/templates/data_upload/netupload.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7479,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7479,
+								7479
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
 							"git_gutter_is_enabled": true,
@@ -648,112 +881,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "data_upload/forms.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 112,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"git_gutter_is_enabled": true,
-							"git_savvy.repo_path": "/root/Desktop/Repositories/Github/dg",
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3018.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
@@ -761,19 +889,19 @@
 				},
 				{
 					"buffer": 4,
-					"file": "data_upload/models.py",
+					"file": "dg/settings.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 329,
+						"buffer_size": 2725,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2719,
+								2719
 							]
 						],
 						"settings":
@@ -796,31 +924,143 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
+							"git_gutter_is_enabled": true,
+							"git_savvy.repo_path": "/root/Desktop/Repositories/Github/dg",
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2219.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3271,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3271,
+								3271
+							]
+						],
+						"settings":
+						{
+							"auto_indent": false,
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
@@ -831,37 +1071,33 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"git_gutter_is_enabled": true,
-							"git_savvy.repo_path": "/root/Desktop/Repositories/Github/dg",
-							"syntax": "Packages/Python/Python.sublime-syntax"
+							"default_dir": "/root/Desktop/Repositories/Github/dg",
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_width": 2,
+							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 635.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -916,6 +1152,10 @@
 		"selected_items":
 		[
 			[
+				"loop/view",
+				"loop/views.py"
+			],
+			[
 				"mana",
 				"manage.py"
 			]
@@ -930,7 +1170,7 @@
 		[
 			[
 				"",
-				"~/Desktop/Repositories/Github/mezzanine-1/mezzanine1.sublime-project"
+				"~/Desktop/Repositories/Github/Mezzanine/mezzanine.sublime-project"
 			],
 			[
 				"ka",
@@ -956,7 +1196,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 323.0,
+	"side_bar_width": 233.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

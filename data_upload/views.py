@@ -22,7 +22,7 @@ from dg.settings import PERMISSION_DENIED_URL
 import person
 from data_upload.models import Document
 from data_upload.forms import DocumentForm
-from geographies.models import  Block
+from geographies.models import  Block, State
 from coco.models import CocoUser
 
 
@@ -54,74 +54,139 @@ def home(request):
 
 # Handle file upload
 def file_upload(request):
-    """
-    Upload data in the file to database.
-    File formats: {.xls, .xlsx., .csv}
-    """ 
-    ext_allwd = ['.xls', '.xlsx']
-    
-    del person.ERROR_FILENAMES[:] #empty the list of files
-    del person.SUCCESS_FILENAMES[:]
-    
-    user_id = User.objects.get(username=request.user.username).id
-    block_id = Block.objects.get(block_name=request.POST.get("get_block")).id
-    
-    form = DocumentForm(request.POST, request.FILES)
-    
-    if not form.is_valid():
-        raise forms.ValidationError("Invalid form")        
+    if 'personal_form' in request.POST:
+        """
+        Upload data in the file to database.
+        File formats: {.xls, .xlsx., .csv}
+        """ 
+        ext_allwd = ['.xls', '.xlsx']
+        
+        del person.ERROR_FILENAMES[:] #empty the list of files
+        del person.SUCCESS_FILENAMES[:]
+        
+        user_id = User.objects.get(username=request.user.username).id
+        block_id = Block.objects.get(block_name=request.POST.get("get_block")).id
+        form = DocumentForm(request.POST, request.FILES)
+        
+        if not form.is_valid():
+            raise forms.ValidationError("Invalid form")        
 
-    document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)
-     
-    file_ext = os.path.splitext(document_raw.docfile.name)[-1]  
-    
-    error_list = []
-    
-    if (file_ext in ext_allwd):
-        try:
-            document_raw.save()
-            document = file_converter(document_raw)
-        except Exception, err:
-            error_list.append(err)
-    
-    elif (file_ext == '.csv'):
-        try:
-            document_raw.save()
-            document = document_raw.docfile.name
-        except Exception, err:
-            error_list.append(err)
+        document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)
+         
+        file_ext = os.path.splitext(document_raw.docfile.name)[-1]  
+        
+        error_list = []
+        
+        if (file_ext in ext_allwd):
+            try:
+                document_raw.save()
+                document = file_converter(document_raw)
+            except Exception, err:
+                error_list.append(err)
+        
+        elif (file_ext == '.csv'):
+            try:
+                document_raw.save()
+                document = document_raw.docfile.name
+            except Exception, err:
+                error_list.append(err)
+        else:
+            error_list.append('Invalid file format!!')    
+        
+        if len(error_list) > 0:
+            return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                      {'valid_errors': error_list },
+                                      context_instance=RequestContext(request))
+       
+        upload_success = person.upload_personal_data(document, user_id, block_id)
+        
+        if not upload_success:
+            valid_errors = ["Some field missing or mismatch. Please " + \
+                  "read instructions or download sample file"]
+            return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                      {'valid_errors' : valid_errors },
+                                      context_instance=RequestContext(request))
+        
+        send_mail(request)
+        
+        if(person.ERROR > 0):
+            csv_data = csv_read()
+            return render_to_response("data_upload/errorPersonal.html", 
+                                      {'csv_data' : csv_data},
+                                      context_instance=RequestContext(request))
+        else:
+            return render_to_response("data_upload/successPersonal.html",
+                                      context_instance=RequestContext(request))
+        
+
     else:
-        error_list.append('Invalid file format!!')    
+        """
+        Upload data in the file to database.
+        File formats: {.xls, .xlsx., .csv}
+        """ 
+        ext_allwd = ['.xls', '.xlsx']
+        
+        del person.ERROR_FILENAMES[:] #empty the list of files
+        del person.SUCCESS_FILENAMES[:]
+        
+        user_id = User.objects.get(username=request.user.username).id
+        state_id = State.objects.get(state_name=request.POST.get("get_state")).id
+        
+        form = DocumentForm(request.POST, request.FILES)
+        
+        if not form.is_valid():
+            raise forms.ValidationError("Invalid form")        
+
+        document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)
+         
+        file_ext = os.path.splitext(document_raw.docfile.name)[-1]  
+        
+        error_list = []
     
-    if len(error_list) > 0:
-        return render_to_response("data_upload/ValidationErrorDisplay.html",
-                                  {'valid_errors': error_list },
-                                  context_instance=RequestContext(request))
-   
-    upload_success = person.upload_data(document, user_id, block_id)
-    
-    if not upload_success:
-        valid_errors = ["Some field missing or mismatch. Please " + \
-              "read instructions or download sample file"]
-        return render_to_response("data_upload/ValidationErrorDisplay.html",
-                                  {'valid_errors' : valid_errors },
-                                  context_instance=RequestContext(request))
-    
-    send_mail(request)
-    
-    if(person.ERROR > 0):
-        csv_data = csv_read()
-        return render_to_response("data_upload/error.html", 
-                                  {'csv_data' : csv_data},
-                                  context_instance=RequestContext(request))
-    else:
-        return render_to_response("data_upload/success.html",
-                                  context_instance=RequestContext(request))
-    
-  
+        if (file_ext in ext_allwd):
+            try:
+                document_raw.save()
+                document = file_converter(document_raw)
+            except Exception, err:
+                error_list.append(err)
+        
+        elif (file_ext == '.csv'):
+            try:
+                document_raw.save()
+                document = document_raw.docfile.name
+            except Exception, err:
+                error_list.append(err)
+        else:
+            error_list.append('Invalid file format!!')    
+        
+        if len(error_list) > 0:
+                return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                      {'valid_errors': error_list },
+                                      context_instance=RequestContext(request))
+       
+        upload_success = person.upload_geographical_data(document, user_id, state_id)
+        
+        if not upload_success:
+            valid_errors = ["Some field missing or mismatch. Please " + \
+                  "read instructions or download sample file"]
+            return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                      {'valid_errors' : valid_errors },
+                                      context_instance=RequestContext(request))
+        
+        send_mail(request)
+        
+        if(person.ERROR > 0):
+            csv_data = csv_read()
+            return render_to_response("data_upload/errorGeographical.html", 
+                                      {'csv_data' : csv_data},
+                                      context_instance=RequestContext(request))
+        else:
+            return render_to_response("data_upload/successGeographical.html",
+                                      context_instance=RequestContext(request))
+
+            
 def file_converter(document):
-# converts file in .xls/.xlsx to .csv
-
+    # converts file in .xls/.xlsx to .csv
     document_docfile_name = os.path.join(dg.settings.MEDIA_ROOT,
                                          document.docfile.name)
     wb = xlrd.open_workbook(document_docfile_name)
@@ -144,9 +209,8 @@ def file_converter(document):
     os.remove(document_docfile_name) #delete the old document
     
     return os.path.splitext(document_docfile_name)[0] +'.csv'
-        
-def handle_zip_download(request):
     
+def handle_zip_download(request):
     buffer= StringIO.StringIO()
     zip_subdir = "error_files"
     zip_filename = "%s.zip" % zip_subdir
@@ -164,7 +228,7 @@ def handle_zip_download(request):
                         content_type = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
     return resp
-    
+        
 
 def csv_read():
     #display successfully upload data in success.html file    
@@ -183,7 +247,7 @@ def csv_read():
         csv_data.append(file_data)
     
     return csv_data  
-    
+
 
 def send_mail(request):
     document = Document(docfile=request.FILES['docfile'])
@@ -202,4 +266,4 @@ def send_mail(request):
         for file in (person.ERROR_FILENAMES + person.SUCCESS_FILENAMES):
             file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', file)
             msg.attach_file(file, 'text/csv' )            
-    msg.send()
+        msg.send()
